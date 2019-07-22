@@ -1,20 +1,14 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput} from 'react-native';
+import { StackNavigator } from 'react-navigation';
+import { createStackNavigator, createAppContainer } from 'react-navigation';
+import Login from './src/componentes/login';
+import Signup from './src/componentes/registrarse';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-        <Text>Bienvenido</Text>
-    </View>
-  );
-}
+const AppNavigator = createStackNavigator(
+  {
+    Home: { screen: Login },
+    Signup: { screen: Signup },
+  }
+);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  
-});
+export default createAppContainer(AppNavigator);
