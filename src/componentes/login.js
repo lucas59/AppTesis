@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, Keyboard } from 'react-native';
-import { Actions } from 'react-native-router-flux';
-const {server} = require('../config/keys'); 
+import { StackNavigator } from 'react-navigation';
+import Signup from '../componentes/registrarse';
+const { server } = require('../config/keys');
 
 export default class Login extends Component {
 
@@ -15,7 +16,23 @@ export default class Login extends Component {
             email: '',
             password: ''
         }
+
+         this.checkSession();
+
     }
+    checkSession = async () => {
+        let usuario = await AsyncStorage.getItem('usuario');
+        console.log('asd', usuario);
+        if (usuario === null) {
+            alert('no session');
+       //    this.props.navigator.navigate(Signup);
+        } else {
+            alert('session');
+            //navigator(Signup);
+        }
+    }
+
+
     //aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 
     saveData = async () => {
@@ -26,30 +43,33 @@ export default class Login extends Component {
             password: password
         }
 
-        fetch(server.app+'login', {
+        fetch(server.api + 'login', {
             method: 'POST',
-            body: loginDetails
-         })
-         .then(function(response) {
-             console.log(response);
-           /* if(response.ok) {
-                return response.text()
-            } else {
-                throw "Error en la llamada Ajax";
-            }*/
-         
-         })
-         .then(function(texto) {
-            console.log(texto);
-         })
-         .catch(function(err) {
-            console.log(err);
-         });
+            headers: {
+                'Aceptar': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(loginDetails)
+        })
+            .then(res => {
+                return res.json()
+            })
+            .then(data => {
+                const retorno = data;
+                console.log(retorno.mensaje);
+                if (retorno.retorno == true) {
+                    alert("Exito");
+                    AsyncStorage.setItem('usuario', JSON.stringify(loginDetails));
+                    navigate(Signup);
+                } else {
+                    alert(retorno.mensaje);
+                }
+            })
+            .catch(function (err) {
+                console.log('error', err);
+            })
 
-
-        AsyncStorage.setItem('loginDetails', JSON.stringify(loginDetails));
         Keyboard.dismiss();
-        this.login();
     }
 
     showData = async () => {
