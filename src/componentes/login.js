@@ -27,7 +27,7 @@ export default class Login extends Component {
             alert('no session');
        //    this.props.navigator.navigate(Signup);
         } else {
-            alert('session');
+            this.props.navigation.navigate('altaTarea');
             //navigator(Signup);
         }
     }
