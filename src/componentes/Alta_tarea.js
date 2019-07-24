@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, Keyboard } from 'react-native';
+import { Button, StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, Keyboard,ToastAndroid } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 const { server } = require('../config/keys');
 import DateTimePicker from "react-native-modal-datetime-picker";
@@ -21,7 +21,15 @@ export default class Alta_tarea extends Component {
         }
     }
 
+    logout = async()=>{
+        AsyncStorage.removeItem('usuario');
+        ToastAndroid.show('Session cerrada.', ToastAndroid.SHORT);
+        this.props.navigation.navigate('Home');
+    }
+
     saveData = async () => {
+        Keyboard.dismiss();
+
         const { titulo, estado, inicio, fin } = this.state;
         let loginDetails = {
             titulo: titulo,
@@ -56,7 +64,6 @@ export default class Alta_tarea extends Component {
                 console.log('error', err);
             })
 
-        Keyboard.dismiss();
     }
 
     showData = async () => {
@@ -82,9 +89,9 @@ export default class Alta_tarea extends Component {
     };
 
     handleDatePicked_inicio = pickeddate => {
-        this.setState({ inicio: pickeddate })
-        const value = await AsyncStorage.getItem('usuario')
-        this.hideDateTimePicker_inicio();
+  /*      this.setState({ inicio: pickeddate })
+        const value = await AsyncStorage.getItem('usuario');
+        this.hideDateTimePicker_inicio();*/
     };
 
     handleDatePicked_fin = pickeddate => {
@@ -129,7 +136,10 @@ export default class Alta_tarea extends Component {
                     />
 
                     <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText} onPress={this.saveData /*()=>this.saveData}>{this.props.type*/}>Aceptar</Text>
+                        <Text style={styles.buttonText} onPress={this.saveData}>Aceptar</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button}>
+                        <Text style={styles.buttonText} onPress={this.logout }>Cerrar Session momentaneo</Text>
                     </TouchableOpacity>
                 </View>
             </>

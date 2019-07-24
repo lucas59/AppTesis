@@ -8,7 +8,7 @@ import altaTarea from './src/componentes/Alta_tarea';
 const AppNavigator = createStackNavigator(
   {
     Home: { screen: Login },
-    Signup: { screen: Signup },
+    registrarse: { screen: Signup },
     altaTarea: { screen: altaTarea }
   }
 );

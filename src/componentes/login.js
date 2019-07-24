@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, Keyboard } from 'react-native';
-import { StackNavigator } from 'react-navigation';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, Keyboard, ToastAndroid } from 'react-native';
 import Signup from '../componentes/registrarse';
 const { server } = require('../config/keys');
+import styles from '../css/styleLogin';
 
 export default class Login extends Component {
 
@@ -16,27 +16,30 @@ export default class Login extends Component {
             email: '',
             password: ''
         }
-
-         this.checkSession();
-
+        this.checkSession();
     }
     checkSession = async () => {
         let usuario = await AsyncStorage.getItem('usuario');
-        console.log('asd', usuario);
-        if (usuario === null) {
-            alert('no session');
-       //    this.props.navigator.navigate(Signup);
-        } else {
+        if (usuario != null) {
             this.props.navigation.navigate('altaTarea');
-            //navigator(Signup);
         }
     }
 
+    openSignup = async () =>{
+        this.props.navigation.navigate('registrarse');
+    }
 
-    //aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 
     saveData = async () => {
+        Keyboard.dismiss();
+
         const { email, password } = this.state;
+
+        if (email == "" || password == "") {
+            ToastAndroid.show('Ingresa datos validos.', ToastAndroid.SHORT);
+            return;
+        }
+
         //save data with asyncstorage
         let loginDetails = {
             email: email,
@@ -60,16 +63,17 @@ export default class Login extends Component {
                 if (retorno.retorno == true) {
                     alert("Exito");
                     AsyncStorage.setItem('usuario', JSON.stringify(loginDetails));
-                    navigate(Signup);
+                    this.props.navigation.navigate('altaTarea');
                 } else {
                     alert(retorno.mensaje);
+                    //  this.props.navigation.navigate('registrarse')
+
                 }
             })
             .catch(function (err) {
                 console.log('error', err);
             })
 
-        Keyboard.dismiss();
     }
 
     showData = async () => {
@@ -101,7 +105,10 @@ export default class Login extends Component {
                 />
 
                 <TouchableOpacity style={styles.button}>
-                    <Text style={styles.buttonText} onPress={this.saveData /*()=>this.saveData}>{this.props.type*/}></Text>
+                    <Text style={styles.buttonText} onPress={this.saveData}>Entrar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                    <Text onPress={this.openSignup}>Crear mi cuenta</Text>
                 </TouchableOpacity>
             </View>
 
@@ -110,32 +117,3 @@ export default class Login extends Component {
 
 
 }
-
-const styles = StyleSheet.create({
-    container: {
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    inputBox: {
-        width: 300,
-        backgroundColor: '#eeeeee',
-        borderRadius: 25,
-        paddingHorizontal: 16,
-        fontSize: 16,
-        color: '#002f6c',
-        marginVertical: 10
-    },
-    button: {
-        width: 300,
-        backgroundColor: '#4f83cc',
-        borderRadius: 25,
-        marginVertical: 10,
-        paddingVertical: 12
-    },
-    buttonText: {
-        fontSize: 16,
-        fontWeight: '500',
-        color: '#ffffff',
-        textAlign: 'center'
-    }
-});
