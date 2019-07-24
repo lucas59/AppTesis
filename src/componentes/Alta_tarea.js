@@ -83,7 +83,7 @@ export default class Alta_tarea extends Component {
 
     handleDatePicked_inicio = pickeddate => {
         this.setState({ inicio: pickeddate })
-        const value = await AsyncStorage.getItem('usuario')
+       // const value = await AsyncStorage.getItem('usuario')
         this.hideDateTimePicker_inicio();
     };
 
