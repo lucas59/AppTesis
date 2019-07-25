@@ -21,7 +21,7 @@ export default class Login extends Component {
     checkSession = async () => {
         let usuario = await AsyncStorage.getItem('usuario');
         if (usuario != null) {
-            this.props.navigation.navigate('altaTarea');
+            this.props.navigation.navigate('Inicio');
         }
     }
 
@@ -62,7 +62,7 @@ export default class Login extends Component {
                 if (retorno.retorno == true) {
                     ToastAndroid.show('Bienvenido.', ToastAndroid.LONG);
                     AsyncStorage.setItem('usuario', JSON.stringify(loginDetails));
-                    this.props.navigation.navigate('altaTarea');
+                    this.props.navigation.navigate('Inicio');
                 } else {
                     ToastAndroid.show(retorno.mensaje, ToastAndroid.LONG);
                 }

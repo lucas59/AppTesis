@@ -29,11 +29,9 @@ export default class Alta_tarea extends Component {
 
     saveData = async () => {
         Keyboard.dismiss();
-
         const { titulo, estado, inicio, fin } = this.state;
         let loginDetails = {
             titulo: titulo,
-            estado: estado,
             inicio: inicio,
             fin: fin
         }
@@ -53,9 +51,8 @@ export default class Alta_tarea extends Component {
                 const retorno = data;
                 console.log(retorno.mensaje);
                 if (retorno.retorno == true) {
-                    alert("Exito");
+                    alert("La tarea se dio de alta correctamente");
                     AsyncStorage.setItem('usuario', JSON.stringify(loginDetails));
-                    navigate(Signup);
                 } else {
                     alert(retorno.mensaje);
                 }
@@ -65,13 +62,6 @@ export default class Alta_tarea extends Component {
             })
 
     }
-
-    showData = async () => {
-        let loginDetails = await AsyncStorage.getItem('loginDetails');
-        let ld = JSON.parse(loginDetails);
-        alert('email: ' + ld.email + ' ' + 'password: ' + ld.password);
-    }
-
     showDateTimePicker_inicio = () => {
         this.setState({ isDateTimePickerVisible_inicio: true });
     };
@@ -112,14 +102,6 @@ export default class Alta_tarea extends Component {
                         selectionColor="#fff"
                     />
 
-                    <TextInput style={styles.inputBox}
-                        onChangeText={(estado) => this.setState({ estado })}
-                        underlineColorAndroid='rgba(0,0,0,0)'
-                        placeholder="Descripción de la tarea"
-                        placeholderTextColor="#002f6c"
-                    />
-
-
                     <Button title="Dia y hora de inicio" onPress={this.showDateTimePicker_inicio} />
                     <DateTimePicker
                         isVisible={this.state.isDateTimePickerVisible_inicio}
@@ -137,9 +119,6 @@ export default class Alta_tarea extends Component {
 
                     <TouchableOpacity style={styles.button}>
                         <Text style={styles.buttonText} onPress={this.saveData}>Aceptar</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText} onPress={this.logout }>Cerrar Session momentaneo</Text>
                     </TouchableOpacity>
                 </View>
             </>
