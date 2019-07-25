@@ -1,17 +1,26 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 module.exports = StyleSheet.create({
     container: {
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: '#ffff',
+    }, inputContainer: {
+        borderBottomColor: '#8594A6',
+        backgroundColor: '#FFFF',
+        borderRadius: 30,
+        borderBottomWidth: 1,
+        width: 250,
+        height: 45,
+        marginBottom: 20,
+        flexDirection: 'row',
+        alignItems: 'center'
     },
     inputBox: {
-        width: 300,
-        backgroundColor: '#eeeeee',
-        borderRadius: 25,
-        paddingHorizontal: 16,
-        fontSize: 16,
-        color: '#002f6c',
-        marginVertical: 10
+        height: 45,
+        marginLeft: 16,
+        borderBottomColor: '#8594A6',
+        flex: 1,
     },
     button: {
         width: 300,
@@ -25,6 +34,24 @@ module.exports = StyleSheet.create({
         fontWeight: '500',
         color: '#ffff',
         textAlign: 'center'
-    }
+    },
+    signupButton: {
+        backgroundColor: "#034358",
+    },
+
+    inputIcon: {
+        width: 30,
+        height: 30,
+        marginLeft: 15,
+        justifyContent: 'center'
+    }, buttonContainer: {
+        height: 45,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 20,
+        width: 250,
+        borderRadius: 30,
+    },
 });
 

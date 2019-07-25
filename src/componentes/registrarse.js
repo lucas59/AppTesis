@@ -92,7 +92,6 @@ export default class Signup extends React.Component {
                         underlineColorAndroid='transparent'
                         onChangeText={(fullName) => this.setState({ fullName })} />
                 </View>
-
                 <View style={styles.inputContainer}>
                     <Image style={styles.inputIcon} source={{ uri: 'https://png.icons8.com/message/ultraviolet/50/3498db' }} />
                     <TextInput style={styles.inputs}
@@ -101,7 +100,6 @@ export default class Signup extends React.Component {
                         underlineColorAndroid='transparent'
                         onChangeText={(email) => this.setState({ email })} />
                 </View>
-
                 <View style={styles.inputContainer}>
                     <Image style={styles.inputIcon} source={{ uri: 'https://png.icons8.com/key-2/ultraviolet/50/3498db' }} />
                     <TextInput style={styles.inputs}

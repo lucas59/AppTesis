@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, Keyboard, ToastAndroid } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, Keyboard, ToastAndroid, Image } from 'react-native';
 import Signup from '../componentes/registrarse';
 const { server } = require('../config/keys');
 import styles from '../css/styleLogin';
@@ -25,7 +25,7 @@ export default class Login extends Component {
         }
     }
 
-    openSignup = async () =>{
+    openSignup = async () => {
         this.props.navigation.navigate('registrarse');
     }
 
@@ -59,15 +59,12 @@ export default class Login extends Component {
             })
             .then(data => {
                 const retorno = data;
-                console.log(retorno.mensaje);
                 if (retorno.retorno == true) {
-                    alert("Exito");
+                    ToastAndroid.show('Bienvenido.', ToastAndroid.LONG);
                     AsyncStorage.setItem('usuario', JSON.stringify(loginDetails));
                     this.props.navigation.navigate('altaTarea');
                 } else {
-                    alert(retorno.mensaje);
-                    //  this.props.navigation.navigate('registrarse')
-
+                    ToastAndroid.show(retorno.mensaje, ToastAndroid.LONG);
                 }
             })
             .catch(function (err) {
@@ -82,34 +79,40 @@ export default class Login extends Component {
         alert('email: ' + ld.email + ' ' + 'password: ' + ld.password);
     }
 
-
     render() {
         return (
             <View style={styles.container}>
-                <TextInput style={styles.inputBox}
-                    onChangeText={(email) => this.setState({ email })}
-                    underlineColorAndroid='rgba(0,0,0,0)'
-                    placeholder="Email"
-                    placeholderTextColor="#002f6c"
-                    selectionColor="#fff"
-                    keyboardType="email-address"
-                    onSubmitEditing={() => this.password.focus()} />
+                <View style={styles.inputContainer}>
+                    <Image style={styles.inputIcon} source={{ uri: 'https://png.icons8.com/male-user/ultraviolet/50/3498db' }} />
+                    <TextInput style={styles.inputBox}
+                        onChangeText={(email) => this.setState({ email })}
+                        underlineColorAndroid='rgba(0,0,0,0)'
+                        placeholder="Email"
+                        placeholderTextColor="#002f6c"
+                        selectionColor="#fff"
+                        keyboardType="email-address"
+                        onSubmitEditing={() => this.password.focus()} />
+                </View>
+                <View style={styles.inputContainer}>
+                <Image style={styles.inputIcon} source={{ uri: 'https://png.icons8.com/key-2/ultraviolet/50/3498db'}} />
 
-                <TextInput style={styles.inputBox}
-                    onChangeText={(password) => this.setState({ password })}
-                    underlineColorAndroid='rgba(0,0,0,0)'
-                    placeholder="Password"
-                    secureTextEntry={true}
-                    placeholderTextColor="#002f6c"
-                    ref={(input) => this.password = input}
-                />
-
-                <TouchableOpacity style={styles.button}>
+                    <TextInput style={styles.inputBox}
+                        onChangeText={(password) => this.setState({ password })}
+                        underlineColorAndroid='rgba(0,0,0,0)'
+                        placeholder="Password"
+                        secureTextEntry={true}
+                        placeholderTextColor="#002f6c"
+                        ref={(input) => this.password = input}
+                    />
+                </View>
+                <TouchableOpacity style={[styles.buttonContainer, styles.signupButton]}>
                     <Text style={styles.buttonText} onPress={this.saveData}>Entrar</Text>
                 </TouchableOpacity>
+
                 <TouchableOpacity>
                     <Text onPress={this.openSignup}>Crear mi cuenta</Text>
                 </TouchableOpacity>
+
             </View>
 
         )
