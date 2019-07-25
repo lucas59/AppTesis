@@ -4,11 +4,13 @@ import {
     Text,
     View,
     TextInput,
-    Button,
     TouchableHighlight,
     Image,
-    Alert
 } from 'react-native';
+import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
+
+const { server } = require('../config/keys');
+
 export default class Signup extends React.Component {
 
 
@@ -16,16 +18,70 @@ export default class Signup extends React.Component {
         title: 'Crea una cuenta',
     };
 
+
+
     constructor(props) {
         super(props);
         state = {
             fullName: '',
             email: '',
-            password: ''
-        }
+            password: '',
+            tipo:0
+        };
     }
 
+
+    saveData = async () => {
+        //Keyboard.dismiss();
+        const { email, password, fullName, tipo } = this.state;
+
+        if (email == "" || password == "" || fullName == "") {
+            ToastAndroid.show('Ingresa datos validos.', ToastAndroid.SHORT);
+            return;
+        }
+
+        //save data with asyncstorage
+        let datos = {
+            email: email,
+            password: password,
+            fullName: fullName,
+            tipo:tipo
+        }
+
+        fetch(server.api + 'signup', {
+            method: 'POST',
+            headers: {
+                'Aceptar': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(datos)
+        })
+            .then(res => {
+                return res.json()
+            })
+            .then(data => {
+                const retorno = data;
+                console.log(retorno);
+                /*   if (retorno.retorno == true) {
+                       alert("Exito");
+                       AsyncStorage.setItem('usuario', JSON.stringify(datos));
+                       this.props.navigation.navigate('altaTarea');
+                   } else {
+                       alert(retorno.mensaje);
+                   }*/
+            })
+            .catch(function (err) {
+                console.log('error', err);
+            })
+
+    }
+
+
     render() {
+        var radio_props = [
+            { label: 'Empresa', value: 0 },
+            { label: 'Colaborador', value: 1 }
+        ];
         return (
             <View style={styles.container}>
                 <View style={styles.inputContainer}>
@@ -54,8 +110,14 @@ export default class Signup extends React.Component {
                         underlineColorAndroid='transparent'
                         onChangeText={(password) => this.setState({ password })} />
                 </View>
-
-                <TouchableHighlight style={[styles.buttonContainer, styles.signupButton]} onPress={() => this.onClickListener('sign_up')}>
+                <View>
+                    <RadioForm
+                        radio_props={radio_props}
+                        initial={0}
+                        onPress={(value) => { this.setState({ tipo: value }) }}
+                    />
+                </View>
+                <TouchableHighlight style={[styles.buttonContainer, styles.signupButton]} onPress={this.saveData}>
                     <Text style={styles.signUpText}>Sign up</Text>
                 </TouchableHighlight>
             </View>
