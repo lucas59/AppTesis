@@ -21,7 +21,6 @@ export default class Alta_tarea extends Component {
             listaT: ''
         }
         this.Listar();
-        this.pedirPermisos();
     }
 
     logout = async () => {

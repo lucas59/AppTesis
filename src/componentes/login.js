@@ -77,7 +77,7 @@ export default class Login extends Component {
     }
 
     showData = async () => {
-        let loginDetails = await AsyncStorage.getItem('loginDetails');
+        let loginDetails = await AsyncStorage.getItem('usuario');
         let ld = JSON.parse(loginDetails);
         alert('email: ' + ld.email + ' ' + 'password: ' + ld.password);
     }
