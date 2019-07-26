@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, Keyboard, ToastAndroid, Image } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, Keyboard, ToastAndroid, Image, ActivityIndicator } from 'react-native';
 import Signup from '../componentes/registrarse';
 const { server } = require('../config/keys');
 import styles from '../css/styleLogin';
 
 export default class Login extends Component {
+  
 
     static navigationOptions = {
         title: 'Ingresar',
@@ -21,12 +22,13 @@ export default class Login extends Component {
     checkSession = async () => {
         let usuario = await AsyncStorage.getItem('usuario');
         if (usuario != null) {
-            this.props.navigation.navigate('Inicio');
+          this.props.navigation.navigate('Login');
         }
+
     }
 
     openSignup = async () => {
-        this.props.navigation.navigate('registrarse');
+       this.props.navigation.navigate('Signup');
     }
 
 
@@ -54,6 +56,7 @@ export default class Login extends Component {
             },
             body: JSON.stringify(loginDetails)
         })
+
             .then(res => {
                 return res.json()
             })
@@ -62,7 +65,7 @@ export default class Login extends Component {
                 if (retorno.retorno == true) {
                     ToastAndroid.show('Bienvenido.', ToastAndroid.LONG);
                     AsyncStorage.setItem('usuario', JSON.stringify(loginDetails));
-                    this.props.navigation.navigate('Inicio');
+                  this.props.navigation.navigate('Inicio');
                 } else {
                     ToastAndroid.show(retorno.mensaje, ToastAndroid.LONG);
                 }
@@ -94,7 +97,7 @@ export default class Login extends Component {
                         onSubmitEditing={() => this.password.focus()} />
                 </View>
                 <View style={styles.inputContainer}>
-                <Image style={styles.inputIcon} source={{ uri: 'https://png.icons8.com/key-2/ultraviolet/50/3498db'}} />
+                    <Image style={styles.inputIcon} source={{ uri: 'https://png.icons8.com/key-2/ultraviolet/50/3498db' }} />
 
                     <TextInput style={styles.inputBox}
                         onChangeText={(password) => this.setState({ password })}

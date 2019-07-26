@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { Button, StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, Keyboard, ToastAndroid } from 'react-native';
+import { PermissionsAndroid ,Button, StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, Keyboard, ToastAndroid } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import NavBar, { NavButton, NavButtonText, NavTitle } from 'react-native-nav'
 const { server } = require('../config/keys');
 import DateTimePicker from "react-native-modal-datetime-picker";
 import { FlatList } from 'react-native-gesture-handler';
-export default class Alta_tarea extends Component {
+import { Platform } from '@unimodules/core';
 
+export default class Alta_tarea extends Component {
 
     constructor(props) {
         super(props);
@@ -20,12 +21,13 @@ export default class Alta_tarea extends Component {
             listaT: ''
         }
         this.Listar();
+        this.pedirPermisos();
     }
 
     logout = async () => {
         AsyncStorage.removeItem('usuario');
         ToastAndroid.show('Session cerrada.', ToastAndroid.SHORT);
-        this.props.navigation.navigate('Home');
+        this.props.navigation.navigate('Login');
     }
 
     altaTarea = async () => {
@@ -80,7 +82,7 @@ export default class Alta_tarea extends Component {
         return (
             <>
                 <NavBar>
-                    <NavButton onPress={ this.altaTarea}>
+                    <NavButton onPress={this.altaTarea}>
                         <NavButtonText>
                             {"Alta tarea"}
                         </NavButtonText>
@@ -88,14 +90,14 @@ export default class Alta_tarea extends Component {
                     <NavTitle>
                         {"App"}
                     </NavTitle>
-                    <NavButton onPress={ this.logout}>
+                    <NavButton onPress={this.logout}>
                         <NavButtonText>
                             {"Cerrar Sesión"}
                         </NavButtonText>
                     </NavButton>
                 </NavBar>
                 <View style={styles.container}>
-                <Text style={styles.titulo} >Lista de tareas</Text>
+                    <Text style={styles.titulo} >Lista de tareas</Text>
                     {this.parseData()}
                 </View>
             </>

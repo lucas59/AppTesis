@@ -23,7 +23,7 @@ export default class Alta_tarea extends Component {
 
     logout = async()=>{
         AsyncStorage.removeItem('usuario');
-        ToastAndroid.show('Session cerrada.', ToastAndroid.SHORT);
+        ToastAndroid.show('Session cerrada.', ToastAndroid.LONG);
         this.props.navigation.navigate('Home');
     }
 

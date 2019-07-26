@@ -62,13 +62,13 @@ export default class Signup extends React.Component {
             .then(data => {
                 const retorno = data;
                 console.log(retorno);
-                /*   if (retorno.retorno == true) {
-                       alert("Exito");
+                 if (retorno.retorno == true) {
+                    Toas.show('Bienvenido',ToastAndroid.SHORT);
                        AsyncStorage.setItem('usuario', JSON.stringify(datos));
                        this.props.navigation.navigate('altaTarea');
                    } else {
                        alert(retorno.mensaje);
-                   }*/
+                   }
             })
             .catch(function (err) {
                 console.log('error', err);
