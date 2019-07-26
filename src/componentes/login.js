@@ -42,7 +42,6 @@ export default class Login extends Component {
             return;
         }
 
-        //save data with asyncstorage
         let loginDetails = {
             email: email,
             password: password

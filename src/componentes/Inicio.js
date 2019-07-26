@@ -59,7 +59,6 @@ export default class Alta_tarea extends Component {
             .catch(function (err) {
                 console.log('error', err);
             })
-
     }
 
 
