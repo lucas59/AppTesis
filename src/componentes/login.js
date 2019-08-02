@@ -64,7 +64,13 @@ export default class Login extends Component {
                 if (retorno.retorno == true) {
                     ToastAndroid.show('Bienvenido.', ToastAndroid.LONG);
                     AsyncStorage.setItem('usuario', JSON.stringify(loginDetails));
-                  this.props.navigation.navigate('Inicio');
+
+                    if(retorno.tipo==1){
+                        this.props.navigation.navigate('Inicio');
+                    }else{
+                        this.props.navigation.navigate('modoTablet');
+                    }
+
                 } else {
                     ToastAndroid.show(retorno.mensaje, ToastAndroid.LONG);
                 }
@@ -79,6 +85,12 @@ export default class Login extends Component {
         let loginDetails = await AsyncStorage.getItem('usuario');
         let ld = JSON.parse(loginDetails);
         alert('email: ' + ld.email + ' ' + 'password: ' + ld.password);
+    }
+
+    registro2 = async () =>{
+        this.props.navigation.navigate('Signup2',{
+            tipo:"empleado"
+        });
     }
 
     render() {
@@ -107,14 +119,13 @@ export default class Login extends Component {
                         ref={(input) => this.password = input}
                     />
                 </View>
-                <TouchableOpacity style={[styles.buttonContainer, styles.signupButton]}>
+                <TouchableOpacity onPress={this.saveData} style={[styles.buttonContainer, styles.signupButton]}>
                     <Text style={styles.buttonText} onPress={this.saveData}>Entrar</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity>
                     <Text onPress={this.openSignup}>Crear mi cuenta</Text>
                 </TouchableOpacity>
-
             </View>
 
         )

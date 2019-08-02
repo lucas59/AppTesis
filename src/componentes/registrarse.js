@@ -6,6 +6,8 @@ import {
     TextInput,
     TouchableHighlight,
     Image,
+    ToastAndroid,
+    AsyncStorage
 } from 'react-native';
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 
@@ -18,22 +20,21 @@ export default class Signup extends React.Component {
         title: 'Crea una cuenta',
     };
 
-
-
     constructor(props) {
         super(props);
         state = {
             fullName: '',
             email: '',
             password: '',
-            tipo:0
+            tipo: 0,
+            documento:'',
         };
     }
 
 
-    saveData = async () => {
+    saveData = async () => { /////////////////////////envio de datos a la api
         //Keyboard.dismiss();
-        const { email, password, fullName, tipo } = this.state;
+        const { email, password, fullName, tipo, documento } = this.state;
 
         if (email == "" || password == "" || fullName == "") {
             ToastAndroid.show('Ingresa datos validos.', ToastAndroid.SHORT);
@@ -45,8 +46,11 @@ export default class Signup extends React.Component {
             email: email,
             password: password,
             fullName: fullName,
-            tipo:tipo
+            tipo: tipo,
+            documento:documento
         }
+        console.log('tipo',datos);
+
 
         fetch(server.api + 'signup', {
             method: 'POST',
@@ -61,14 +65,16 @@ export default class Signup extends React.Component {
             })
             .then(data => {
                 const retorno = data;
-                console.log(retorno);
-                 if (retorno.retorno == true) {
-                    Toas.show('Bienvenido',ToastAndroid.SHORT);
-                       AsyncStorage.setItem('usuario', JSON.stringify(datos));
-                       this.props.navigation.navigate('altaTarea');
-                   } else {
-                       alert(retorno.mensaje);
-                   }
+                console.log(retorno.retorno);
+                if (retorno.retorno == true) {
+                  //  ToastAndroid.show('Bienvenido', ToastAndroid.SHORT);
+                    AsyncStorage.setItem('usuario', JSON.stringify(datos));
+                   this.props.navigation.navigate('Signup2', {
+                        datos: JSON.stringify(datos)
+                    });
+                } else {
+                    alert(retorno.mensaje);
+                }
             })
             .catch(function (err) {
                 console.log('error', err);
@@ -85,19 +91,32 @@ export default class Signup extends React.Component {
         return (
             <View style={styles.container}>
                 <View style={styles.inputContainer}>
+                    <Image style={styles.inputIcon} source={{ uri: 'https://img.icons8.com/ultraviolet/50/000000/identification-documents.png' }} />
+                    <TextInput style={styles.inputs}
+                        placeholder="Documento"
+                        underlineColorAndroid='transparent'
+                        placeholderTextColor="#002f6c"
+                        selectionColor="#fff"
+                        onChangeText={(documento) => this.setState({ documento })} />
+                </View>
+                <View style={styles.inputContainer}>
                     <Image style={styles.inputIcon} source={{ uri: 'https://png.icons8.com/male-user/ultraviolet/50/3498db' }} />
                     <TextInput style={styles.inputs}
                         placeholder="Nombre de usuario"
                         keyboardType="email-address"
                         underlineColorAndroid='transparent'
+                        placeholderTextColor="#002f6c"
+                        selectionColor="#fff"
                         onChangeText={(fullName) => this.setState({ fullName })} />
                 </View>
                 <View style={styles.inputContainer}>
-                    <Image style={styles.inputIcon} source={{ uri: 'https://png.icons8.com/message/ultraviolet/50/3498db' }} />
+                    <Image style={styles.inputIcon} source={{ uri: 'https://img.icons8.com/ultraviolet/40/000000/email.png' }} />
                     <TextInput style={styles.inputs}
                         placeholder="Correo"
                         keyboardType="email-address"
                         underlineColorAndroid='transparent'
+                        placeholderTextColor="#002f6c"
+                        selectionColor="#fff"
                         onChangeText={(email) => this.setState({ email })} />
                 </View>
                 <View style={styles.inputContainer}>
@@ -106,6 +125,8 @@ export default class Signup extends React.Component {
                         placeholder="Contraseña"
                         secureTextEntry={true}
                         underlineColorAndroid='transparent'
+                        placeholderTextColor="#002f6c"
+                        selectionColor="#fff"
                         onChangeText={(password) => this.setState({ password })} />
                 </View>
                 <View>
@@ -116,7 +137,7 @@ export default class Signup extends React.Component {
                     />
                 </View>
                 <TouchableHighlight style={[styles.buttonContainer, styles.signupButton]} onPress={this.saveData}>
-                    <Text style={styles.signUpText}>Sign up</Text>
+                    <Text onPress={this.saveData} style={styles.signUpText}>Sign up</Text>
                 </TouchableHighlight>
             </View>
         );
