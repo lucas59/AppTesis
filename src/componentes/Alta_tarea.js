@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Button, StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, Keyboard,ToastAndroid } from 'react-native';
+import { Button, StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, Keyboard, ToastAndroid } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 const { server } = require('../config/keys');
-import DateTimePicker from "react-native-modal-datetime-picker";
+import { AppRegistry, TouchableHighlight } from 'react-native';
+import { Stopwatch, Timer } from 'react-native-stopwatch-timer';
 export default class Alta_tarea extends Component {
 
     static navigationOptions = {
@@ -16,79 +17,80 @@ export default class Alta_tarea extends Component {
             estado: '',
             inicio: '',
             fin: '',
-            isDateTimePickerVisible_inicio: false,
-            isDateTimePickerVisible_fin: false
-        }
+            timerStart: false,
+            stopwatchStart: false,
+            totalDuration: 90000,
+            timerReset: false,
+            stopwatchReset: false,
+        };
+        this.toggleStopwatch = this.toggleStopwatch.bind(this);
+        this.resetStopwatch = this.resetStopwatch.bind(this);
     }
 
-    logout = async()=>{
-        AsyncStorage.removeItem('usuario');
-        ToastAndroid.show('Session cerrada.', ToastAndroid.LONG);
-        this.props.navigation.navigate('Home');
+    toggleStopwatch() {
+        this.setState({ stopwatchStart: !this.state.stopwatchStart, stopwatchReset: false });
+        var date = new Date();
+        if (this.state.stopwatchStart == false) {
+            this.setState({ inicio: date })
+        } else {
+            this.setState({ fin: date })
+        }
+        this.state.estado = 1;
     }
+
+    resetStopwatch() {
+        this.setState({ stopwatchStart: false, stopwatchReset: true });
+        this.setState({ inicio: '' })
+        this.setState({ fin: '' })
+    }
+
+    getFormattedTime(time) {
+        this.currentTime = time;
+    };
 
     saveData = async () => {
         Keyboard.dismiss();
         const { titulo, estado, inicio, fin } = this.state;
-        let loginDetails = {
+        let tarea_send = {
             titulo: titulo,
             inicio: inicio,
-            fin: fin
+            fin: fin,
+            estado: estado
         }
-        console.log(loginDetails);
-        fetch(server.api + 'Alta_tarea', {
-            method: 'POST',
-            headers: {
-                'Aceptar': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(loginDetails)
-        })
-            .then(res => {
-                return res.json()
+        console.log(tarea_send);
+        if (tarea_send.inicio == '' || tarea_send.fin == '') {
+            alert("Inicie una tarea");
+        }
+        else if (tarea_send.titulo == '') {
+            alert("Ingrese le nombre de la tarea");
+        }
+        else {
+            fetch(server.api + 'Alta_tarea', {
+                method: 'POST',
+                headers: {
+                    'Aceptar': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(tarea_send)
             })
-            .then(data => {
-                const retorno = data;
-                console.log(retorno.mensaje);
-                if (retorno.retorno == true) {
-                    alert("La tarea se dio de alta correctamente");
-                    AsyncStorage.setItem('usuario', JSON.stringify(loginDetails));
-                } else {
-                    alert(retorno.mensaje);
-                }
-            })
-            .catch(function (err) {
-                console.log('error', err);
-            })
-
+                .then(res => {
+                    return res.json()
+                })
+                .then(data => {
+                    const retorno = data;
+                    console.log(retorno.mensaje);
+                    if (retorno.retorno == true) {
+                        alert("La tarea se dio de alta correctamente");
+                        AsyncStorage.setItem('tarea', JSON.stringify(tarea_send));
+                    } else {
+                        alert(retorno.mensaje);
+                    }
+                })
+                .catch(function (err) {
+                    console.log('error', err);
+                })
+        }
     }
-    showDateTimePicker_inicio = () => {
-        this.setState({ isDateTimePickerVisible_inicio: true });
-    };
-
-    hideDateTimePicker_inicio = () => {
-        this.setState({ isDateTimePickerVisible_inicio: false });
-    };
-
-    showDateTimePicker_fin = () => {
-        this.setState({ isDateTimePickerVisible_fin: true });
-    };
-
-    hideDateTimePicker_fin = () => {
-        this.setState({ isDateTimePickerVisible_fin: false });
-    };
-
-    handleDatePicked_inicio = pickeddate => {
-        this.setState({ inicio: pickeddate })
-       // const value = await AsyncStorage.getItem('usuario')
-        this.hideDateTimePicker_inicio();
-    };
-
-    handleDatePicked_fin = pickeddate => {
-        this.setState({ fin: pickeddate })
-        this.hideDateTimePicker_inicio();
-        this.hideDateTimePicker_fin();
-    };
     render() {
         return (
             <>
@@ -100,22 +102,16 @@ export default class Alta_tarea extends Component {
                         placeholderTextColor="#002f6c"
                         selectionColor="#fff"
                     />
-
-                    <Button title="Dia y hora de inicio" onPress={this.showDateTimePicker_inicio} />
-                    <DateTimePicker
-                        isVisible={this.state.isDateTimePickerVisible_inicio}
-                        onConfirm={(date) => this.handleDatePicked_inicio(date)}
-                        onCancel={this.hideDateTimePicker_inicio}
-                        mode={'datetime'}
-                    />
-                    <Button title="Dia y hora del final" onPress={this.showDateTimePicker_fin} />
-                    <DateTimePicker
-                        isVisible={this.state.isDateTimePickerVisible_fin}
-                        onConfirm={this.handleDatePicked_fin}
-                        onCancel={this.hideDateTimePicker_fin}
-                        mode={'datetime'}
-                    />
-
+                    <Stopwatch laps msecs start={this.state.stopwatchStart}
+                        reset={this.state.stopwatchReset}
+                        options={options}
+                        getTime={this.getFormattedTime} />
+                    <TouchableHighlight onPress={this.toggleStopwatch}>
+                        <Text style={{ fontSize: 30 }}>{!this.state.stopwatchStart ? "Iniciar" : "Parar"}</Text>
+                    </TouchableHighlight>
+                    <TouchableHighlight onPress={this.resetStopwatch}>
+                        <Text style={{ fontSize: 30 }}>Reiniciar</Text>
+                    </TouchableHighlight>
                     <TouchableOpacity style={styles.button}>
                         <Text style={styles.buttonText} onPress={this.saveData}>Aceptar</Text>
                     </TouchableOpacity>
@@ -151,5 +147,37 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         color: '#ffffff',
         textAlign: 'center'
+    },
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+    },
+    myButton: {
+        padding: 5,
+        height: 200,
+        width: 200,  //The Width must be the same as the height
+        borderRadius: 400, //Then Make the Border Radius twice the size of width or Height   
+        backgroundColor: 'rgb(195, 125, 198)',
+
     }
 });
+
+
+const handleTimerComplete = () => alert("custom completion function");
+
+const options = {
+    container: {
+        backgroundColor: '#000',
+        padding: 5,
+        borderRadius: 5,
+        width: 220,
+    },
+    text: {
+        fontSize: 30,
+        color: '#FFF',
+        marginLeft: 7,
+    }
+};
+
