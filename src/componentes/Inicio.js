@@ -24,14 +24,13 @@ export default class Inicio extends Component {
     }
 
      Redirigir = async ()  =>{
-         await AsyncStorage.removeItem('usuario');
+        // await AsyncStorage.removeItem('usuario');
         let session = await AsyncStorage.getItem('usuario');
         let sessionParce = JSON.parse(session);
-        console.log(session);
         if (session===null) {
             this.props.navigation.navigate('Login');
         }else{
-            console.log(sessionParce.tipo)
+            console.log(sessionParce)
             if (sessionParce.tipo == 1) {
                 this.props.navigation.navigate('altaTarea');
             }else{

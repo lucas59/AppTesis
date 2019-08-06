@@ -63,7 +63,7 @@ export default class Login extends Component {
                 const retorno = data;
                 if (retorno.retorno == true) {
                     ToastAndroid.show('Bienvenido.', ToastAndroid.LONG);
-                    AsyncStorage.setItem('usuario', JSON.stringify(loginDetails));
+                    AsyncStorage.setItem('usuario', JSON.stringify(retorno));
 
                     if(retorno.tipo==1){
                         this.props.navigation.navigate('Inicio');
