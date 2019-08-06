@@ -15,7 +15,6 @@ const { server } = require('../config/keys');
 
 export default class Signup extends React.Component {
 
-
     static navigationOptions = {
         title: 'Crea una cuenta',
     };
@@ -27,29 +26,38 @@ export default class Signup extends React.Component {
             email: '',
             password: '',
             tipo: 0,
-            documento:'',
+            documento: '',
         };
+        console.log('tipo', state.tipo)
     }
 
 
     saveData = async () => { /////////////////////////envio de datos a la api
         //Keyboard.dismiss();
         const { email, password, fullName, tipo, documento } = this.state;
-
         if (email == "" || password == "" || fullName == "") {
             ToastAndroid.show('Ingresa datos validos.', ToastAndroid.SHORT);
             return;
         }
+
+        var tipo2;
+
+        if (tipo == undefined) {
+            tipo2 = 0;
+        }else{
+            tipo2=tipo;
+        }
+
 
         //save data with asyncstorage
         let datos = {
             email: email,
             password: password,
             fullName: fullName,
-            tipo: tipo,
-            documento:documento
+            tipo: tipo2,
+            documento: documento
         }
-        console.log('tipo',datos);
+        console.log('tipo', datos);
 
 
         fetch(server.api + 'signup', {
@@ -67,9 +75,9 @@ export default class Signup extends React.Component {
                 const retorno = data;
                 console.log(retorno.retorno);
                 if (retorno.retorno == true) {
-                  //  ToastAndroid.show('Bienvenido', ToastAndroid.SHORT);
+                    //  ToastAndroid.show('Bienvenido', ToastAndroid.SHORT);
                     AsyncStorage.setItem('usuario', JSON.stringify(datos));
-                   this.props.navigation.navigate('Signup2', {
+                    this.props.navigation.navigate('Signup2', {
                         datos: JSON.stringify(datos)
                     });
                 } else {

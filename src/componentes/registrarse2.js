@@ -164,7 +164,7 @@ export default class Signup2 extends React.Component {
                 'Aceptar': 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: { datos: JSON.stringify(datosFinales) }
+            body:  JSON.stringify(datosFinales) 
         })
             .then(res => {
                 return res.json()
