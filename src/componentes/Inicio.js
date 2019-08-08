@@ -23,27 +23,54 @@ export default class Inicio extends Component {
         this.Redirigir();
     }
 
-     Redirigir = async ()  =>{
+    Redirigir = async () => {
         // await AsyncStorage.removeItem('usuario');
         let session = await AsyncStorage.getItem('usuario');
         let sessionParce = JSON.parse(session);
-        if (session===null) {
+        if (session === null) {
             this.props.navigation.navigate('Login');
-        }else{
+        } else {
             console.log(sessionParce)
-            if (sessionParce.tipo == 1) {
-                this.props.navigation.navigate('altaTarea');
-            }else{
+            if (sessionParce.tipo == 0){
                 this.props.navigation.navigate('modoTablet');
+            }
+            else {
+                this.props.navigation.navigate('lista_empresas');
             }
         }
     }
 
-    render(){
-        return(
-            <View></View>
-        );
-
+    render() {
+        return (
+            <>
+                <View style={styles.container}>
+                    <Text style={styles.titulo} >Lista de tareas</Text>
+                </View>
+            </>
+        )
     }
-
 }
+
+
+const styles = StyleSheet.create({
+    container: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    titulo: {
+        fontSize: 20,
+        textAlign: 'center',
+        fontWeight: 'bold'
+    },
+    button: {
+        width: 300,
+        backgroundColor: '#4f83cc',
+        borderRadius: 25,
+        marginVertical: 10,
+        paddingVertical: 12
+    },
+    lista: {
+        marginTop: 5,
+        marginBottom: 5
+    }
+});
