@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 const { server } = require('../config/keys');
-import LandscapeView from 'react-native-landscape-view';
 export default class modoTablet extends Component {
 
     static navigationOptions = {
@@ -16,14 +15,7 @@ export default class modoTablet extends Component {
 
     render() {
         return (
-
-            <>
-              <LandscapeView>
-            <WebView source={{
-                uri:'https://google.com'
-                }} />
-        </LandscapeView>
-            </>
+            <View></View>
         )
     }
 }

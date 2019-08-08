@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableHighlight, TouchableOpacity, View, Image, TextInput, AsyncStorage } from 'react-native';
+import { StyleSheet, Text, TouchableHighlight, TouchableOpacity, View, Image, TextInput, AsyncStorage, KeyboardAvoidingView } from 'react-native';
 import { ImagePicker, Permissions } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from "react-native-modal-datetime-picker";
@@ -91,7 +91,7 @@ export default class Signup2 extends React.Component {
             nacimiento,
             image
         }
-        console.log('finales',datosFinales);
+        console.log('finales', datosFinales);
 
 
         await fetch(server.api + 'signup2', {
@@ -164,7 +164,7 @@ export default class Signup2 extends React.Component {
                 'Aceptar': 'application/json',
                 'Content-Type': 'application/json',
             },
-            body:  JSON.stringify(datosFinales) 
+            body: JSON.stringify(datosFinales)
         })
             .then(res => {
                 return res.json()
@@ -191,67 +191,61 @@ export default class Signup2 extends React.Component {
         const datos = JSON.parse(navigation.getParam('datos'));
         if (datos.tipo == 1) {
             return (
-                <View style={styles.container}>
-                    <Text>Bienvenido</Text>
-                    <Image style={styles.image} source={{ uri: this.state.image }} />
-                    <View style={styles.row}>
-                        <Button onPress={this.selectPicture}><Ionicons name="md-camera" size={32} />Gallery</Button>
-                        <Button onPress={this.takePicture}><Ionicons name="md-photos" size={32} />Camera</Button>
-                    </View>
-                    <View style={styles.inputContainer}>
-                        <TextInput style={styles.inputs}
-                            placeholder="Nombre"
-                            underlineColorAndroid='transparent'
-                            onChangeText={(nombre) => this.setState({ nombre })} />
-                    </View>
-                    <View style={styles.inputContainer}>
-                        <TextInput style={styles.inputs}
-                            placeholder="Apellido"
-                            underlineColorAndroid='transparent'
-                            onChangeText={(apellido) => this.setState({ apellido })} />
-                    </View>
-                    <View style={styles.inputContainer}>
-                        <TextInput style={styles.inputs}
-                            placeholder="Celular"
-                            underlineColorAndroid='transparent'
-                            onChangeText={(celular) => this.setState({ celular })} />
-                    </View>
-                    <View style={styles.inputContainer}>
-                        <TextInput style={styles.inputs}
-                            placeholder="Documento"
-                            underlineColorAndroid='transparent'
-                            onChangeText={(documento) => this.setState({ documento })} />
-                    </View>
-                    <Button title="Fecha de nacimiento" onPress={this.showDateTimePicker_inicio}>Fecha de nacimiento</Button>
 
-                    <DateTimePicker
-                        isVisible={this.state.isDateTimePickerVisible_inicio}
-                        onConfirm={this.handleDatePicked_inicio}
-                        onCancel={this.hideDateTimePicker_inicio}
-                        mode={'datetime'}
-                    />
-                    <TouchableHighlight style={[styles.buttonContainer, styles.signupButton]} onPress={this.enviarDatosEmpleado}>
-                        <Text onPress={this.enviarDatosEmpleado} style={styles.signUpText}>Listo</Text>
-                    </TouchableHighlight>
-                </View>
+                <KeyboardAvoidingView style={{ flex: 1 }}
+                    behavior="padding">
+                    <View style={styles.container}>
+                        <Text>Bienvenido</Text>
+
+                        <View style={styles.inputContainer}>
+                            <TextInput style={styles.inputs}
+                                placeholder="Nombre"
+                                underlineColorAndroid='transparent'
+                                onChangeText={(nombre) => this.setState({ nombre })} />
+                        </View>
+                        <View style={styles.inputContainer}>
+                            <TextInput style={styles.inputs}
+                                placeholder="Apellido"
+                                underlineColorAndroid='transparent'
+                                onChangeText={(apellido) => this.setState({ apellido })} />
+                        </View>
+                        <View style={styles.inputContainer}>
+                            <TextInput style={styles.inputs}
+                                placeholder="Celular"
+                                underlineColorAndroid='transparent'
+                                onChangeText={(celular) => this.setState({ celular })} />
+                        </View>
+                        <Button title="Fecha de nacimiento" onPress={this.showDateTimePicker_inicio}>Fecha de nacimiento</Button>
+
+                        <DateTimePicker
+                            isVisible={this.state.isDateTimePickerVisible_inicio}
+                            onConfirm={this.handleDatePicked_inicio}
+                            onCancel={this.hideDateTimePicker_inicio}
+                            mode={'datetime'}
+                        />
+                        <TouchableHighlight style={[styles.buttonContainer, styles.signupButton]} onPress={this.enviarDatosEmpleado}>
+                            <Text onPress={this.enviarDatosEmpleado} style={styles.signUpText}>Listo</Text>
+                        </TouchableHighlight>
+                    </View>
+                </KeyboardAvoidingView>
             );
         } else {
             return (
-                <View style={styles.container}>
-                    <View style={styles.row}>
-                        <Button onPress={this.selectPicture}><Ionicons name="md-camera" size={32} />Gallery</Button>
-                        <Button onPress={this.takePicture}><Ionicons name="md-photos" size={32} />Camera</Button>
+
+                <KeyboardAvoidingView style={{ flex: 1 }}
+                    behavior="padding">
+                    <View style={styles.container}>
+                        <View style={styles.inputContainer}>
+                            <TextInput style={styles.inputs}
+                                placeholder="Nombre"
+                                underlineColorAndroid='transparent'
+                                onChangeText={(nombre) => this.setState({ nombre })} />
+                        </View>
+                        <TouchableHighlight style={[styles.buttonContainer, styles.signupButton]} onPress={this.enviarDatosEmpresa}>
+                            <Text onPress={this.enviarDatosEmpresa} style={styles.signUpText}>Listo</Text>
+                        </TouchableHighlight>
                     </View>
-                    <View style={styles.inputContainer}>
-                        <TextInput style={styles.inputs}
-                            placeholder="Nombre"
-                            underlineColorAndroid='transparent'
-                            onChangeText={(nombre) => this.setState({ nombre })} />
-                    </View>
-                    <TouchableHighlight style={[styles.buttonContainer, styles.signupButton]} onPress={this.enviarDatosEmpresa}>
-                        <Text onPress={this.enviarDatosEmpresa} style={styles.signUpText}>Listo</Text>
-                    </TouchableHighlight>
-                </View>
+                </KeyboardAvoidingView>
             );
 
         }

@@ -7,8 +7,10 @@ import {
     TouchableHighlight,
     Image,
     ToastAndroid,
-    AsyncStorage
+    AsyncStorage,
+    KeyboardAvoidingView
 } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 
 const { server } = require('../config/keys');
@@ -44,8 +46,8 @@ export default class Signup extends React.Component {
 
         if (tipo == undefined) {
             tipo2 = 0;
-        }else{
-            tipo2=tipo;
+        } else {
+            tipo2 = tipo;
         }
 
 
@@ -97,57 +99,61 @@ export default class Signup extends React.Component {
             { label: 'Colaborador', value: 1 }
         ];
         return (
-            <View style={styles.container}>
-                <View style={styles.inputContainer}>
-                    <Image style={styles.inputIcon} source={{ uri: 'https://img.icons8.com/ultraviolet/50/000000/identification-documents.png' }} />
-                    <TextInput style={styles.inputs}
-                        placeholder="Documento"
-                        underlineColorAndroid='transparent'
-                        placeholderTextColor="#002f6c"
-                        selectionColor="#fff"
-                        onChangeText={(documento) => this.setState({ documento })} />
+            <KeyboardAvoidingView style={{flex:1}}
+            behavior="padding">
+                <View style={styles.container}>
+                    <View style={styles.inputContainer}>
+                        <Image style={styles.inputIcon} source={{ uri: 'https://img.icons8.com/ultraviolet/50/000000/identification-documents.png' }} />
+                        <TextInput style={styles.inputs}
+                            placeholder="Documento"
+                            underlineColorAndroid='transparent'
+                            placeholderTextColor="#002f6c"
+                            selectionColor="#fff"
+                            onChangeText={(documento) => this.setState({ documento })}
+                        />
+                    </View>
+                    <View style={styles.inputContainer}>
+                        <Image style={styles.inputIcon} source={{ uri: 'https://png.icons8.com/male-user/ultraviolet/50/3498db' }} />
+                        <TextInput style={styles.inputs}
+                            placeholder="Nombre de usuario"
+                            keyboardType="email-address"
+                            underlineColorAndroid='transparent'
+                            placeholderTextColor="#002f6c"
+                            selectionColor="#fff"
+                            onChangeText={(fullName) => this.setState({ fullName })} />
+                    </View>
+                    <View style={styles.inputContainer}>
+                        <Image style={styles.inputIcon} source={{ uri: 'https://img.icons8.com/ultraviolet/40/000000/email.png' }} />
+                        <TextInput style={styles.inputs}
+                            placeholder="Correo"
+                            keyboardType="email-address"
+                            underlineColorAndroid='transparent'
+                            placeholderTextColor="#002f6c"
+                            selectionColor="#fff"
+                            onChangeText={(email) => this.setState({ email })} />
+                    </View>
+                    <View style={styles.inputContainer}>
+                        <Image style={styles.inputIcon} source={{ uri: 'https://png.icons8.com/key-2/ultraviolet/50/3498db' }} />
+                        <TextInput style={styles.inputs}
+                            placeholder="Contraseña"
+                            secureTextEntry={true}
+                            underlineColorAndroid='transparent'
+                            placeholderTextColor="#002f6c"
+                            selectionColor="#fff"
+                            onChangeText={(password) => this.setState({ password })} />
+                    </View>
+                    <View>
+                        <RadioForm
+                            radio_props={radio_props}
+                            initial={0}
+                            onPress={(value) => { this.setState({ tipo: value }) }}
+                        />
+                    </View>
+                    <TouchableHighlight style={[styles.buttonContainer, styles.signupButton]} onPress={this.saveData}>
+                        <Text onPress={this.saveData} style={styles.signUpText}>Sign up</Text>
+                    </TouchableHighlight>
                 </View>
-                <View style={styles.inputContainer}>
-                    <Image style={styles.inputIcon} source={{ uri: 'https://png.icons8.com/male-user/ultraviolet/50/3498db' }} />
-                    <TextInput style={styles.inputs}
-                        placeholder="Nombre de usuario"
-                        keyboardType="email-address"
-                        underlineColorAndroid='transparent'
-                        placeholderTextColor="#002f6c"
-                        selectionColor="#fff"
-                        onChangeText={(fullName) => this.setState({ fullName })} />
-                </View>
-                <View style={styles.inputContainer}>
-                    <Image style={styles.inputIcon} source={{ uri: 'https://img.icons8.com/ultraviolet/40/000000/email.png' }} />
-                    <TextInput style={styles.inputs}
-                        placeholder="Correo"
-                        keyboardType="email-address"
-                        underlineColorAndroid='transparent'
-                        placeholderTextColor="#002f6c"
-                        selectionColor="#fff"
-                        onChangeText={(email) => this.setState({ email })} />
-                </View>
-                <View style={styles.inputContainer}>
-                    <Image style={styles.inputIcon} source={{ uri: 'https://png.icons8.com/key-2/ultraviolet/50/3498db' }} />
-                    <TextInput style={styles.inputs}
-                        placeholder="Contraseña"
-                        secureTextEntry={true}
-                        underlineColorAndroid='transparent'
-                        placeholderTextColor="#002f6c"
-                        selectionColor="#fff"
-                        onChangeText={(password) => this.setState({ password })} />
-                </View>
-                <View>
-                    <RadioForm
-                        radio_props={radio_props}
-                        initial={0}
-                        onPress={(value) => { this.setState({ tipo: value }) }}
-                    />
-                </View>
-                <TouchableHighlight style={[styles.buttonContainer, styles.signupButton]} onPress={this.saveData}>
-                    <Text onPress={this.saveData} style={styles.signUpText}>Sign up</Text>
-                </TouchableHighlight>
-            </View>
+            </KeyboardAvoidingView>
         );
     }
 }

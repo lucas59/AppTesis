@@ -17,6 +17,7 @@
     "react-native-fontawesome": "^6.0.1",
     "react-native-image-picker": "^1.0.1",
     "react-native-ionicons": "^4.6.1",
+    "react-native-keyboard-aware-scroll-view": "^0.8.0",
     "react-native-modal-datetime-picker": "^7.5.0",
     "react-native-nav": "^2.0.2",
     "react-native-navbar": "^2.1.0",
