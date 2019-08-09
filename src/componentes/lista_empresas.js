@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import { ListView, StyleSheet, Text, View, AsyncStorage, Keyboard, ToastAndroid } from 'react-native';
-import NavBar, { NavButton, NavButtonText, NavTitle } from 'react-native-nav'
 const { server } = require('../config/keys');
-import DateTimePicker from "react-native-modal-datetime-picker";
-import { FlatList } from 'react-native-gesture-handler';
-import { Platform } from '@unimodules/core';
+import { ListItem } from 'react-native-elements';
 
 export default class lista_empresas extends Component {
     
@@ -15,13 +12,18 @@ export default class lista_empresas extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            titulo: '',
+            estado: '',
+            inicio: '',
+            fin: '',
             listaT: ''
         }
+        this.Listar();
     }
 
     Listar = async () => {
         Keyboard.dismiss();
-        await fetch(server.api + '/Tareas/ListaTareas', {
+        await fetch(server.api + '/Tareas/ListaEmpresas', {
             method: 'POST',
             headers: {
                 'Aceptar': 'application/json',
@@ -47,17 +49,23 @@ export default class lista_empresas extends Component {
 
     }
 
+    redireccionar_alta = async (data) => {
+        AsyncStorage.setItem('empresa', data);
+        
+        this.props.navigation.navigate('altaTarea');
+    }
+
 
     parseData() {
         if (this.state.listaT) {
             return this.state.listaT.map((data, i) => {
                 return (
-                    <View key={i} style={styles.lista}>
-                        <Text>Titulo: {data.titulo}</Text>
-                        <Text>Estado: {data.estado.data}</Text>
-                        <Text>Fecha de inicio: {data.inicio}</Text>
-                        <Text>Fecha de fin: {data.fin}</Text>
-                    </View>
+                    <ListItem
+                        key={i}
+                        leftAvatar={{ source: { uri: data.fotoPerfil } }}
+                        title={data.nombre}
+                        onPress={() => this.redireccionar_alta(data.id)}
+                    />
                 )
             })
         }
@@ -66,19 +74,16 @@ export default class lista_empresas extends Component {
         return (
             <>
                 <View style={styles.container}>
-                <Text style={styles.titulo} >Lista de tareas</Text>
+                    <Text style={styles.titulo} >Lista de Empresas</Text>
                     {this.parseData()}
                 </View>
             </>
         )
     }
 }
-
-
 const styles = StyleSheet.create({
     container: {
-        justifyContent: 'center',
-        alignItems: 'center',
+        justifyContent: 'center'
     },
     titulo: {
         fontSize: 20,

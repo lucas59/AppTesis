@@ -4,6 +4,8 @@ import { StackNavigator } from 'react-navigation';
 const { server } = require('../config/keys');
 import { AppRegistry, TouchableHighlight } from 'react-native';
 import { Stopwatch, Timer } from 'react-native-stopwatch-timer';
+import * as Location from 'expo-location';
+
 export default class Alta_tarea extends Component {
 
     static navigationOptions = {
@@ -14,7 +16,6 @@ export default class Alta_tarea extends Component {
         super(props);
         this.state = {
             titulo: '',
-            estado: '',
             inicio: '',
             fin: '',
             timerStart: false,
@@ -22,6 +23,8 @@ export default class Alta_tarea extends Component {
             totalDuration: 90000,
             timerReset: false,
             stopwatchReset: false,
+            long: '',
+            lat: ''
         };
         this.toggleStopwatch = this.toggleStopwatch.bind(this);
         this.resetStopwatch = this.resetStopwatch.bind(this);
@@ -35,7 +38,6 @@ export default class Alta_tarea extends Component {
         } else {
             this.setState({ fin: date })
         }
-        this.state.estado = 1;
     }
 
     resetStopwatch() {
@@ -50,12 +52,20 @@ export default class Alta_tarea extends Component {
 
     saveData = async () => {
         Keyboard.dismiss();
-        const { titulo, estado, inicio, fin } = this.state;
+        await Permissions.askAsync(Permissions.LOCATION);
+        var loc = await Location.getCurrentPositionAsync();
+        var longitud = loc.coords.longitude;
+        var latitud = loc.coords.latitude;
+        this.setState({ long: longitud});
+        this.setState({ lat: latitud});
+
+        const { titulo,  inicio, fin, long, lat } = this.state;
         let tarea_send = {
             titulo: titulo,
             inicio: inicio,
             fin: fin,
-            estado: estado
+            long: long,
+            lat: lat
         }
         console.log(tarea_send);
         if (tarea_send.inicio == '' || tarea_send.fin == '') {

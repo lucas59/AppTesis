@@ -8,7 +8,7 @@ import Signup from './src/componentes/registrarse';
 import Signup2 from './src/componentes/registrarse2';
 import altaTarea from './src/componentes/Alta_tarea';
 import Inicio from './src/componentes/Inicio';
-import modoTablet from './src/componentes/empresa'
+import modoTablet from './src/componentes/modo_tablet'
 import lista_empresas from './src/componentes/lista_empresas'
 
 
