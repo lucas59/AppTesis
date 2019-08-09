@@ -49,9 +49,9 @@ export default class lista_empresas extends Component {
 
     }
 
-    redireccionar_alta = async (data) => {
-        AsyncStorage.setItem('empresa', data);
-        
+    redireccionar_alta = async (id,nombre) => {
+        var myArray = [id,nombre];
+        AsyncStorage.setItem('empresa', JSON.stringify(myArray));        
         this.props.navigation.navigate('altaTarea');
     }
 
@@ -64,7 +64,7 @@ export default class lista_empresas extends Component {
                         key={i}
                         leftAvatar={{ source: { uri: data.fotoPerfil } }}
                         title={data.nombre}
-                        onPress={() => this.redireccionar_alta(data.id)}
+                        onPress={() => this.redireccionar_alta(data.id, data.nombre)}
                     />
                 )
             })

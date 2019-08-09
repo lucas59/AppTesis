@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, AsyncStorage, Keyboard, ToastAndroid } from 'react-native';
 const { server } = require('../config/keys');
-import { Permissions } from 'expo';
+
 
 export default class Inicio extends Component {
 
@@ -20,11 +20,10 @@ export default class Inicio extends Component {
     }
 
     Redirigir = async () => {
-         await AsyncStorage.removeItem('usuario');
+        //await AsyncStorage.removeItem('usuario');
         let session = await AsyncStorage.getItem('usuario');
         let sessionParce = JSON.parse(session);
         if (session === null) {
-            await Permissions.askAsync(Permissions.CAMERA);
             this.props.navigation.navigate('Login');
         } else {
             if (sessionParce.tipo == 0) {
