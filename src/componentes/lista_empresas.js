@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { ListView, StyleSheet, Text, View, AsyncStorage, Keyboard, ToastAndroid } from 'react-native';
+import { StyleSheet, Text, View, AsyncStorage, Keyboard } from 'react-native';
 const { server } = require('../config/keys');
 import { ListItem } from 'react-native-elements';
 
 export default class lista_empresas extends Component {
-    
+
     static navigationOptions = {
         title: 'Inicio',
     };
@@ -49,12 +49,11 @@ export default class lista_empresas extends Component {
 
     }
 
-    redireccionar_alta = async (id,nombre) => {
-        var myArray = [id,nombre];
-        AsyncStorage.setItem('empresa', JSON.stringify(myArray));        
+    redireccionar_alta = async (id, nombre) => {
+        var myArray = [id, nombre];
+        AsyncStorage.setItem('empresa', JSON.stringify(myArray));
         this.props.navigation.navigate('altaTarea');
     }
-
 
     parseData() {
         if (this.state.listaT) {
