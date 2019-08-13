@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "App",
-    "slug": "App",
+    "name": "TINE",
+    "slug": "TINE",
     "privacy": "public",
     "sdkVersion": "33.0.0",
     "platforms": [
@@ -10,7 +10,7 @@
       "web"
     ],
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "default",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",

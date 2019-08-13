@@ -221,7 +221,7 @@ export default class Signup2 extends React.Component {
                             isVisible={this.state.isDateTimePickerVisible_inicio}
                             onConfirm={this.handleDatePicked_inicio}
                             onCancel={this.hideDateTimePicker_inicio}
-                            mode={'datetime'}
+                            mode={'date'}
                         />
                         <TouchableHighlight style={[styles.buttonContainer, styles.signupButton]} onPress={this.enviarDatosEmpleado}>
                             <Text onPress={this.enviarDatosEmpleado} style={styles.signUpText}>Listo</Text>
