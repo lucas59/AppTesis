@@ -1,5 +1,5 @@
 import React from 'react';
-import { StackNavigator, createSwitchNavigator, createStackNavigator, createAppContainer } from 'react-navigation';
+import { StackNavigator, createSwitchNavigator, createStackNavigator, createAppContainer, createDrawerNavigator, DrawerNavigator } from 'react-navigation';
 
 //vistas
 
@@ -25,3 +25,5 @@ export default createAppContainer(createSwitchNavigator(
     Auth2: AuthStack2,
   }
 ));
+
+

@@ -20,7 +20,7 @@ export default class Inicio extends Component {
     }
 
     Redirigir = async () => {
-        //await AsyncStorage.removeItem('usuario');
+        // await AsyncStorage.removeItem('usuario');
         let session = await AsyncStorage.getItem('usuario');
         let sessionParce = JSON.parse(session);
         if (session === null) {
