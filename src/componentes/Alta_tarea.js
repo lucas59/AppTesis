@@ -114,6 +114,7 @@ export default class Alta_tarea extends Component {
     render() {
         return (
             <>
+            
                 <View style={styles.container}>
                     <TextInput style={styles.inputBox}
                         onChangeText={(titulo) => this.setState({ titulo })}
