@@ -60,19 +60,27 @@ export default class lista_tareas extends Component {
         if (this.state.listaT) {
             var fecha = null;
             return this.state.listaT.map((data, i) => {
+                //fecha de inicio y de fin de la tarea
                 var dia_inicio = new Date(data.inicio);
                 var dia_fin = new Date(data.fin);
-                const a = moment(dia_inicio);
-                const b = moment(dia_fin);
-                const segundos = a.diff(b, 'seconds');
-                const minutos = a.diff(b, 'minutes');
-                const horas = a.diff(b, 'hour');
+
+                //fecha pasa de Date a moment
+                const moment_inicio = moment(dia_inicio);
+                const moment_final = moment(dia_fin);
+
+                //obtener las horas, minutos y segundos
+                const segundos = moment_inicio.diff(moment_final, 'seconds');
+                const minutos = moment_inicio.diff(moment_final, 'minutes');
+                const horas = moment_inicio.diff(moment_final, 'hour');
+
+                //setear la fecha de la tarea en una variable para luego compararla con la fecha de la tarea actual
                 var comp = fecha;
-                fecha = moment(dia_fin).format('MMMM Do YYYY');
+
+                //fecha es igual a la fecha de la tarea actual
+                fecha = moment(dia_inicio).format('MMMM Do YYYY');
                 return (
                     <View key={i}>
-                        {comp != moment(dia_fin).format('MMMM Do YYYY') ? <Text>{moment(dia_inicio).locale('fr').format('MMMM Do YYYY')}</Text> : null}
-
+                        {comp != moment(dia_inicio).format('MMMM Do YYYY') ? <Text style={{marginLeft: 10}}>{moment(dia_inicio).format('MMMM Do YYYY')}</Text> : null}
                         <ListItem
                             leftIcon={{ name: 'assignment' }}
                             title={data.titulo}
