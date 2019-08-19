@@ -1,13 +1,28 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, AsyncStorage, Keyboard } from 'react-native';
+import { StyleSheet, View, Text, Alert, ScrollView, Keyboard } from 'react-native';
 const { server } = require('../config/keys');
-import { ListItem } from 'react-native-elements';
+import { ListItem, Icon, Divider } from 'react-native-elements';
 import { FloatingAction } from "react-native-floating-action";
-
+import moment from "moment";
 
 export default class lista_tareas extends Component {
     static navigationOptions = {
-        title: 'Inicio',
+        title: 'TINE',
+        headerStyle: {
+            backgroundColor: '#1E8AF1',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+            fontWeight: 'bold',
+        },
+        headerRight: (
+            <Icon
+                name='face'
+                type='material'
+                color='white'
+                onPress={() => console.log('perfil')} />
+        ),
+
     };
 
     constructor(props) {
@@ -42,16 +57,47 @@ export default class lista_tareas extends Component {
             })
     }
     parseData() {
-        console.log(this.state.listaT);
         if (this.state.listaT) {
+            var fecha = null;
             return this.state.listaT.map((data, i) => {
+                var dia_inicio = new Date(data.inicio);
+                var dia_fin = new Date(data.fin);
+                const a = moment(dia_inicio);
+                const b = moment(dia_fin);
+                const segundos = a.diff(b, 'seconds');
+                const minutos = a.diff(b, 'minutes');
+                const horas = a.diff(b, 'hour');
+                var comp = fecha;
+                fecha = moment(dia_fin).format('MMMM Do YYYY');
                 return (
-                    <ListItem
-                        key={i}
-                        leftIcon={{name : 'assignment'}}
-                        title={data.titulo}
-                    />
+                    <View key={i}>
+                        {comp != moment(dia_fin).format('MMMM Do YYYY') ? <Text>{moment(dia_inicio).locale('fr').format('MMMM Do YYYY')}</Text> : null}
+
+                        <ListItem
+                            leftIcon={{ name: 'assignment' }}
+                            title={data.titulo}
+                            rightTitle={horas + "h " + minutos + "m " + segundos + "s"}
+                            onPress={() => Alert.alert(
+                                "Opciones",
+                                "de tarea " + data.titulo,
+                                [
+                                    { text: "Modificar", onPress: () => console.log("modificado") },
+                                    {
+                                        text: "Eliminar",
+                                        onPress: () => console.log("eliminado"),
+                                        style: "cancel"
+                                    },
+                                ],
+                                { cancelable: true }
+                            )
+                            }
+
+                        />
+
+                    </View>
+
                 )
+
             })
         }
         else {
@@ -75,6 +121,7 @@ export default class lista_tareas extends Component {
 
 
     render() {
+
         const actions = [
             {
                 text: "Alta tarea",
@@ -93,15 +140,16 @@ export default class lista_tareas extends Component {
 
         return (
             <>
-                <View style={styles.container}>
-                    <Text style={styles.titulo} >Lista de tareas</Text>
+                <Text style={styles.titulo}>Lista de tareas</Text>
+                <ScrollView>
                     {this.parseData()}
-                </View>
+                </ScrollView>
                 <FloatingAction
                     style={styles.floatante}
                     actions={actions}
-                    onPressItem={name => {this.redireccionar_alta(name)}}
+                    onPressItem={name => { this.redireccionar_alta(name) }}
                     showBackground={false}
+
                 />
             </>
         )
@@ -128,10 +176,6 @@ const styles = StyleSheet.create({
         marginBottom: 5
     },
     flotante: {
-        width: 60,
-        height: 60,
-        borderRadius: 30,
-        backgroundColor: '#ee6e73',
         position: 'absolute',
         bottom: 10,
         right: 10,
