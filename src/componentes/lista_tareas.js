@@ -1,13 +1,28 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, AsyncStorage, Keyboard } from 'react-native';
+import { StyleSheet, View, Text, Alert, ScrollView, Keyboard } from 'react-native';
 const { server } = require('../config/keys');
-import { ListItem } from 'react-native-elements';
+import { ListItem, Icon, Divider } from 'react-native-elements';
 import { FloatingAction } from "react-native-floating-action";
-
+import moment from "moment";
 
 export default class lista_tareas extends Component {
     static navigationOptions = {
-        title: 'Inicio',
+        title: 'TINE',
+        headerStyle: {
+            backgroundColor: '#1E8AF1',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+            fontWeight: 'bold',
+        },
+        headerRight: (
+            <Icon
+                name='face'
+                type='material'
+                color='white'
+                onPress={() => console.log('perfil')} />
+        ),
+
     };
 
     constructor(props) {
@@ -42,16 +57,55 @@ export default class lista_tareas extends Component {
             })
     }
     parseData() {
-        console.log(this.state.listaT);
         if (this.state.listaT) {
+            var fecha = null;
             return this.state.listaT.map((data, i) => {
+                //fecha de inicio y de fin de la tarea
+                var dia_inicio = new Date(data.inicio);
+                var dia_fin = new Date(data.fin);
+
+                //fecha pasa de Date a moment
+                const moment_inicio = moment(dia_inicio);
+                const moment_final = moment(dia_fin);
+
+                //obtener las horas, minutos y segundos
+                const segundos = moment_inicio.diff(moment_final, 'seconds');
+                const minutos = moment_inicio.diff(moment_final, 'minutes');
+                const horas = moment_inicio.diff(moment_final, 'hour');
+
+                //setear la fecha de la tarea en una variable para luego compararla con la fecha de la tarea actual
+                var comp = fecha;
+
+                //fecha es igual a la fecha de la tarea actual
+                fecha = moment(dia_inicio).format('MMMM Do YYYY');
                 return (
-                    <ListItem
-                        key={i}
-                        leftIcon={{name : 'assignment'}}
-                        title={data.titulo}
-                    />
+                    <View key={i}>
+                        {comp != moment(dia_inicio).format('MMMM Do YYYY') ? <Text style={{marginLeft: 10}}>{moment(dia_inicio).format('MMMM Do YYYY')}</Text> : null}
+                        <ListItem
+                            leftIcon={{ name: 'assignment' }}
+                            title={data.titulo}
+                            rightTitle={horas + "h " + minutos + "m " + segundos + "s"}
+                            onPress={() => Alert.alert(
+                                "Opciones",
+                                "de tarea " + data.titulo,
+                                [
+                                    { text: "Modificar", onPress: () => console.log("modificado") },
+                                    {
+                                        text: "Eliminar",
+                                        onPress: () => console.log("eliminado"),
+                                        style: "cancel"
+                                    },
+                                ],
+                                { cancelable: true }
+                            )
+                            }
+
+                        />
+
+                    </View>
+
                 )
+
             })
         }
         else {
@@ -75,6 +129,7 @@ export default class lista_tareas extends Component {
 
 
     render() {
+
         const actions = [
             {
                 text: "Alta tarea",
@@ -93,15 +148,16 @@ export default class lista_tareas extends Component {
 
         return (
             <>
-                <View style={styles.container}>
-                    <Text style={styles.titulo} >Lista de tareas</Text>
+                <Text style={styles.titulo}>Lista de tareas</Text>
+                <ScrollView>
                     {this.parseData()}
-                </View>
+                </ScrollView>
                 <FloatingAction
                     style={styles.floatante}
                     actions={actions}
-                    onPressItem={name => {this.redireccionar_alta(name)}}
+                    onPressItem={name => { this.redireccionar_alta(name) }}
                     showBackground={false}
+
                 />
             </>
         )
@@ -128,10 +184,6 @@ const styles = StyleSheet.create({
         marginBottom: 5
     },
     flotante: {
-        width: 60,
-        height: 60,
-        borderRadius: 30,
-        backgroundColor: '#ee6e73',
         position: 'absolute',
         bottom: 10,
         right: 10,

@@ -1,16 +1,32 @@
 import React, { Component } from 'react';
-import { Button, StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, Keyboard, ToastAndroid } from 'react-native';
-import { StackNavigator } from 'react-navigation';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, Keyboard } from 'react-native';
 const { server } = require('../config/keys');
-import { AppRegistry, TouchableHighlight } from 'react-native';
-import { Stopwatch, Timer } from 'react-native-stopwatch-timer';
+import { Button, Input, Icon } from 'react-native-elements';
+import { TouchableHighlight } from 'react-native';
+import { Stopwatch } from 'react-native-stopwatch-timer';
 import * as Location from 'expo-location';
 import { Permissions } from 'expo';
+import moment from "moment";
 
 export default class Alta_tarea extends Component {
 
     static navigationOptions = {
-        title: 'Alta tarea',
+        title: 'TINE',
+        headerStyle: {
+            backgroundColor: '#1E8AF1',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+            fontWeight: 'bold',
+        },
+        headerRight: (
+            <Icon
+                name='face'
+                type='material'
+                color='white'
+                onPress={() => console.log('perfil')} />
+        ),
+
     };
 
     constructor(props) {
@@ -24,21 +40,33 @@ export default class Alta_tarea extends Component {
             totalDuration: 90000,
             timerReset: false,
             stopwatchReset: false,
-            long: '',
-            lat: ''
+            long_ini: null,
+            lat_ini: null,
+            lat_fin: null,
+            long_fin: null,
+            cargando: false
         };
         this.toggleStopwatch = this.toggleStopwatch.bind(this);
         this.resetStopwatch = this.resetStopwatch.bind(this);
-        
+
     }
 
-    toggleStopwatch() {
+    toggleStopwatch= async () => {
+        Keyboard.dismiss();
         this.setState({ stopwatchStart: !this.state.stopwatchStart, stopwatchReset: false });
-        var date = new Date();
+        let fecha = moment(new Date()).format();
+        await Permissions.askAsync(Permissions.LOCATION);
+        var loc = await Location.getCurrentPositionAsync();
+        var longitud = loc.coords.longitude;
+        var latitud = loc.coords.latitude;
         if (this.state.stopwatchStart == false) {
-            this.setState({ inicio: date })
+            this.setState({ inicio: fecha });
+            this.setState({ long_ini: longitud });
+            this.setState({ lat_ini: latitud });
         } else {
-            this.setState({ fin: date })
+            this.setState({ fin: fecha });
+            this.setState({ long_fin: longitud });
+            this.setState({ lat_fin: latitud });
         }
     }
 
@@ -53,35 +81,35 @@ export default class Alta_tarea extends Component {
     };
 
     saveData = async () => {
+        this.setState({ cargando: true });
         Keyboard.dismiss();
         let myArray = await AsyncStorage.getItem('empresa');
         let session = await AsyncStorage.getItem('usuario');
         let sesion = JSON.parse(session);
         let empresa_id = JSON.parse(myArray);
-        await Permissions.askAsync(Permissions.LOCATION);
-        var loc = await Location.getCurrentPositionAsync();
-        var longitud = loc.coords.longitude;
-        var latitud = loc.coords.latitude;
-        this.setState({ long: longitud});
-        this.setState({ lat: latitud});
+
         console.log(sesion.documento);
         console.log(myArray);
-        const { titulo,  inicio, fin, long, lat } = this.state;
+        const { titulo, inicio, fin, long_ini, lat_ini, long_fin, lat_fin } = this.state;
         let tarea_send = {
             titulo: titulo,
             inicio: inicio,
             fin: fin,
-            long: long,
-            lat: lat,
+            long_ini: long_ini,
+            lat_ini: lat_ini,
+            long_fin: long_fin,
+            lat_fin: lat_fin,
             empleado_id: sesion.id,
             empresa_id: empresa_id[0]
-            
+
         }
         console.log(tarea_send);
         if (tarea_send.inicio == '' || tarea_send.fin == '') {
+            this.setState({ cargando: false });
             alert("Inicie una tarea");
         }
         else if (tarea_send.titulo == '') {
+            this.setState({ cargando: false });
             alert("Ingrese le nombre de la tarea");
         }
         else {
@@ -100,6 +128,7 @@ export default class Alta_tarea extends Component {
                     const retorno = data;
                     console.log(retorno.mensaje);
                     if (retorno.retorno == true) {
+                        this.setState({ cargando: false });
                         alert("La tarea se dio de alta correctamente");
                         AsyncStorage.setItem('tarea', JSON.stringify(tarea_send));
                     } else {
@@ -109,19 +138,17 @@ export default class Alta_tarea extends Component {
                 .catch(function (err) {
                     console.log('error', err);
                 })
+
         }
     }
     render() {
         return (
+
             <>
-            
                 <View style={styles.container}>
-                    <TextInput style={styles.inputBox}
+                    <Input
                         onChangeText={(titulo) => this.setState({ titulo })}
-                        underlineColorAndroid='rgba(0,0,0,0)'
                         placeholder="Titulo de la tarea"
-                        placeholderTextColor="#002f6c"
-                        selectionColor="#fff"
                     />
                     <Stopwatch laps msecs start={this.state.stopwatchStart}
                         reset={this.state.stopwatchReset}
@@ -130,12 +157,11 @@ export default class Alta_tarea extends Component {
                     <TouchableHighlight onPress={this.toggleStopwatch}>
                         <Text style={{ fontSize: 30 }}>{!this.state.stopwatchStart ? "Iniciar" : "Parar"}</Text>
                     </TouchableHighlight>
-                    <TouchableHighlight onPress={this.resetStopwatch}>
-                        <Text style={{ fontSize: 30 }}>Reiniciar</Text>
-                    </TouchableHighlight>
+
                     <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText} onPress={this.saveData}>Aceptar</Text>
+                        <Button style={styles.buttonText} onPress={this.saveData} title="Aceptar" loading={this.state.cargando} />
                     </TouchableOpacity>
+
                 </View>
             </>
         )
@@ -158,35 +184,20 @@ const styles = StyleSheet.create({
     },
     button: {
         width: 300,
-        backgroundColor: '#4f83cc',
-        borderRadius: 25,
-        marginVertical: 10,
-        paddingVertical: 12
     },
     buttonText: {
         fontSize: 16,
         fontWeight: '500',
-        color: '#ffffff',
         textAlign: 'center'
     },
     container: {
         flex: 1,
-        justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#fff',
-    },
-    myButton: {
-        padding: 5,
-        height: 200,
-        width: 200,  //The Width must be the same as the height
-        borderRadius: 400, //Then Make the Border Radius twice the size of width or Height   
-        backgroundColor: 'rgb(195, 125, 198)',
-
     }
 });
 
 
-const handleTimerComplete = () => alert("custom completion function");
 
 const options = {
     container: {
