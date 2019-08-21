@@ -1,27 +1,9 @@
 import React, { Component } from 'react';
 import { ScrollView, StyleSheet, Text, AsyncStorage, Keyboard } from 'react-native';
 const { server } = require('../config/keys');
-import { ListItem, Icon} from 'react-native-elements';
+import { ListItem, Icon } from 'react-native-elements';
 export default class lista_empresas extends Component {
 
-    static navigationOptions = {
-        title: 'TINE',
-        headerStyle: {
-            backgroundColor: '#1E8AF1',
-        },
-        headerTintColor: '#fff',
-        headerTitleStyle: {
-            fontWeight: 'bold',
-        },
-        headerRight: (
-            <Icon
-                name='face'
-                type='material'
-                color='white'
-                onPress={() => console.log('perfil')} />
-        ),
-
-    };
 
     constructor(props) {
         super(props);
@@ -33,9 +15,34 @@ export default class lista_empresas extends Component {
             listaT: '',
         }
         this.Listar();
+
     }
 
+    static navigationOptions = ({ navigation })  => {
+        return {
+            title: 'TINE',
+            headerStyle: {
+                backgroundColor: '#1E8AF1',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+                fontWeight: 'bold',
+            },
+            headerRight: (
+                <Icon
+                    name='face'
+                    type='material'
+                    color='white'
+                    onPress={ async ()=>navigation.navigate('perfil',{session:await AsyncStorage.getItem('usuario')})} />
+            ),
 
+        }
+    };
+
+
+    redireccionar_perfil() {
+        this.props.navigation.navigate('perfil');
+    }
 
 
     Listar = async () => {
@@ -72,6 +79,9 @@ export default class lista_empresas extends Component {
         this.props.navigation.navigate('lista_tareas');
     }
 
+
+
+
     parseData() {
         if (this.state.listaT) {
             return this.state.listaT.map((data, i) => {
@@ -88,8 +98,9 @@ export default class lista_empresas extends Component {
     }
     render() {
         return (
+
             <>
-               <ScrollView>
+                <ScrollView>
                     <Text style={styles.titulo} >Lista de Empresas</Text>
                     {this.parseData()}
                 </ScrollView>
