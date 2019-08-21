@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { ScrollView, StyleSheet, Text, AsyncStorage, Keyboard } from 'react-native';
+import { ScrollView, StyleSheet, Text, AsyncStorage, Keyboard, Button } from 'react-native';
 const { server } = require('../config/keys');
 import { ListItem, Icon } from 'react-native-elements';
 export default class lista_empresas extends Component {
-
 
     constructor(props) {
         super(props);
@@ -30,9 +29,10 @@ export default class lista_empresas extends Component {
             },
             headerRight: (
                 <Icon
+                reverse
                     name='face'
                     type='material'
-                    color='white'
+                    color='#1E8AF1'
                     onPress={ async ()=>navigation.navigate('perfil',{session:await AsyncStorage.getItem('usuario')})} />
             ),
 
@@ -47,19 +47,25 @@ export default class lista_empresas extends Component {
 
     Listar = async () => {
         Keyboard.dismiss();
+        let session = await AsyncStorage.getItem('usuario');
+        let sesion = JSON.parse(session);
+        let tarea_send = {
+           id: sesion.id
+        }
         await fetch(server.api + '/Tareas/ListaEmpresas', {
             method: 'POST',
             headers: {
                 'Aceptar': 'application/json',
                 'Content-Type': 'application/json',
             },
+            body: JSON.stringify(tarea_send)
         })
             .then(res => {
                 return res.json()
             })
             .then(data => {
                 const retorno = data;
-                console.log(retorno.retorno);
+                
                 if (retorno.retorno == true) {
                     console.log(retorno.mensaje);
                     this.setState({ listaT: retorno.mensaje });
