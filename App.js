@@ -14,7 +14,8 @@ import lista_tareas from './src/componentes/lista_tareas'
 import perfil from './src/componentes/perfil';
 
 const AppStack = createStackNavigator({ Inicio: Inicio});
-const Tareas = createStackNavigator({ lista_empresas: lista_empresas,altaTarea: altaTarea, lista_tareas: lista_tareas,modoTablet: modoTablet,perfil:perfil});
+const Tareas = createStackNavigator({ lista_empresas: lista_empresas,altaTarea: altaTarea, lista_tareas: lista_tareas,perfil:perfil});
+const empresa = createStackNavigator({modoTablet: modoTablet, perfilEmpresa:perfil});
 const AuthStack = createStackNavigator({ Login: Login, Signup: Signup });
 const AuthStack2 = createStackNavigator({ Signup2: Signup2 });
 export default createAppContainer(createSwitchNavigator(
@@ -23,6 +24,7 @@ export default createAppContainer(createSwitchNavigator(
     Tareas: Tareas,
     Auth: AuthStack,
     Auth2: AuthStack2,
+    empresa:empresa
   }
 ));
 

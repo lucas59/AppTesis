@@ -1,13 +1,33 @@
 import React, { Component } from 'react';
-import { View, Button, Keyboard, ToastAndroid } from 'react-native';
+import { View, Button, Keyboard, ToastAndroid, AsyncStorage } from 'react-native';
 const { server } = require('../config/keys');
 import { ImagePicker, Permissions } from 'expo';
 import PinView from 'react-native-pin-view'
+import { Icon } from 'react-native-elements';
 export default class modoTablet extends Component {
 
-    static navigationOptions = {
-        title: 'ModoTablet',
+    static navigationOptions = ({navigation}) => {
+        return {
+            title: 'ModoTablet',
+            headerRight: (
+                <Icon
+                    name='face'
+                    type='material'
+                    color='black'
+                    onPress={async () => navigation.navigate('perfilEmpresa', { session: await AsyncStorage.getItem('usuario') })} />
+
+            ),
+        }
     };
+
+    perfil = async () => {/*
+        var usuario = await AsyncStorage.getItem('usuario');
+        navigation.navigate('perfil', usuario);*/
+
+        var user = await AsyncStorage.getItem('usuario');
+        console.log('usuario', user);
+    }
+
 
     constructor(props) {
         super(props);
@@ -18,7 +38,9 @@ export default class modoTablet extends Component {
             fin: null,
             empleado_id: ''
         }
+        this.perfil();
     }
+
 
     confirmar_usuario = async () => {
         Keyboard.dismiss();

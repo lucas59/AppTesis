@@ -109,8 +109,13 @@ export default class Signup2 extends React.Component {
                 const retorno = data;
                 console.log('retorno', retorno);
                 if (retorno.retorno == true) {
-                    //ToastAndroid.show('Bienvenido', ToastAndroid.SHORT);
-                    AsyncStorage.setItem('usuario', JSON.stringify(datos));
+
+                    var nuevaSession = {
+                        id:datosFinales.documento,
+                        tipo:datosFinales.email
+                    }
+
+                    AsyncStorage.setItem('usuario', JSON.stringify(nuevaSession));
                     this.props.navigation.navigate('Inicio');
                 } else {
                     alert(retorno.mensaje);
@@ -173,8 +178,13 @@ export default class Signup2 extends React.Component {
                 const retorno = data;
                 console.log('retorno', retorno);
                 if (retorno.retorno == true) {
-                    //ToastAndroid.show('Bienvenido', ToastAndroid.SHORT);
-                    AsyncStorage.setItem('usuario', JSON.stringify(datos));
+                    
+                    var nuevaSession = {
+                        id:datosFinales.documento,
+                        tipo:datosFinales.email
+                    }
+
+                    AsyncStorage.setItem('usuario', JSON.stringify(nuevaSession));
                     this.props.navigation.navigate('modoTablet');
                 } else {
                     alert(retorno.mensaje);

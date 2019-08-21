@@ -9,6 +9,7 @@ import {
   TouchableOpacity
 } from 'react-native';
 import styles from '../css/stylesPerfil';
+import { Icon } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
 const { server } = require('../config/keys');
 
@@ -42,33 +43,55 @@ export default class Profile extends Component {
   bajarDatos = () => {
     const { navigation } = this.props;
     const session = JSON.parse(navigation.getParam('session'));
-    fetch(server.api + 'user', {
-      method: 'POST',
-      headers: {
-        'Aceptar': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ session: session.id })
-    })
-
-      .then(res => {
-        return res.json()
+    console.log('session', session);
+    if (session.tipo == 0) {
+      fetch(server.api + 'userEmpresa', {
+        method: 'POST',
+        headers: {
+          'Aceptar': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ session: session.id })
       })
-      .then(data => this.actualizarState(data))
 
-      .catch(function (err) {
-        console.log('error', err);
+        .then(res => {
+          return res.json()
+        })
+        .then(data => this.actualizarState(data))
+
+        .catch(function (err) {
+          console.log('error', err);
+        })
+
+    } else {
+      fetch(server.api + 'user', {
+        method: 'POST',
+        headers: {
+          'Aceptar': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ session: session.id })
       })
+
+        .then(res => {
+          return res.json()
+        })
+        .then(data => this.actualizarState(data))
+
+        .catch(function (err) {
+          console.log('error', err);
+        })
+    }
   }
 
   cerrarSession = async (retorno) => {
     if (retorno) {
       console.log('retorno', retorno);
-       await AsyncStorage.clear();
-       this.props.navigation.navigate('Inicio');
-      } else {
+      await AsyncStorage.clear();
+      this.props.navigation.navigate('Inicio');
+    } else {
       console.log('retorno', retorno);
-    
+
     }
   }
 
@@ -113,6 +136,7 @@ export default class Profile extends Component {
   }
 
   confirmCerrarSession = () => {
+
     Alert.alert(
       'Cerrar sesion',
       '¿Esta seguro que desea cerrar sesion?',
@@ -128,12 +152,40 @@ export default class Profile extends Component {
     );
   }
 
+  cambiarFoto = () => {
+    console.log('cambiando foto');
+  }
+
   render() {
-    return (
+    var imagen;
+    if (this.state.datos.fotoPerfil) {
+      imagen = server.img + this.state.datos.fotoPerfil;
+    } else {
+      imagen = server.img + 'user.jpg';
+    } return (
       <ScrollView>
         <View style={styles.container}>
           <View style={styles.header}></View>
-          <Image style={styles.avatar} source={{ uri: 'http://localhost:4005/img/perfiles/' + this.state.fotoPerfil }} />
+          <Image style={styles.avatar} source={{ uri: imagen }} />
+
+          <TouchableOpacity
+            style={{
+              borderWidth: 1,
+              borderColor: 'rgba(0,0,0,0.2)',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: 70,
+              position: 'absolute',
+              bottom: 10,
+              right: 10,
+              height: 70,
+              backgroundColor: '#fff',
+              borderRadius: 100,
+            }}
+          >
+            <Icon name="edit" size={30} color="#01a699" />
+          </TouchableOpacity>
+
           <View style={styles.body}>
             <View style={styles.bodyContent}>
               <Text style={styles.name}>{this.state.datos.nombre} {this.state.datos.apellido} </Text>
@@ -149,6 +201,7 @@ export default class Profile extends Component {
             </View>
           </View>
         </View>
+
       </ScrollView>
     );
   }
