@@ -1,27 +1,8 @@
 import React, { Component } from 'react';
-import { ScrollView, StyleSheet, Text, AsyncStorage, Keyboard } from 'react-native';
+import { ScrollView, StyleSheet, Text, AsyncStorage, Keyboard, Button } from 'react-native';
 const { server } = require('../config/keys');
-import { ListItem, Icon} from 'react-native-elements';
+import { ListItem, Icon } from 'react-native-elements';
 export default class lista_empresas extends Component {
-
-    static navigationOptions = {
-        title: 'TINE',
-        headerStyle: {
-            backgroundColor: '#1E8AF1',
-        },
-        headerTintColor: '#fff',
-        headerTitleStyle: {
-            fontWeight: 'bold',
-        },
-        headerRight: (
-            <Icon
-                name='face'
-                type='material'
-                color='white'
-                onPress={() => console.log('perfil')} />
-        ),
-
-    };
 
     constructor(props) {
         super(props);
@@ -35,24 +16,54 @@ export default class lista_empresas extends Component {
         this.Listar();
     }
 
+    static navigationOptions = ({ navigation }) => {
+        return {
+            title: 'TINE',
+            headerStyle: {
+                backgroundColor: '#1E8AF1',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+                fontWeight: 'bold',
+            },
+            headerRight: (
+                <Icon
+                reverse
+                name='face'
+                type='material'
+                color='#1E8AF1'
+                onPress={() => navigation.navigate('perfil')} />
+              
+            ),
+
+        };
+    }
+
+
 
 
 
     Listar = async () => {
         Keyboard.dismiss();
+        let session = await AsyncStorage.getItem('usuario');
+        let sesion = JSON.parse(session);
+        let tarea_send = {
+           id: sesion.id
+        }
         await fetch(server.api + '/Tareas/ListaEmpresas', {
             method: 'POST',
             headers: {
                 'Aceptar': 'application/json',
                 'Content-Type': 'application/json',
             },
+            body: JSON.stringify(tarea_send)
         })
             .then(res => {
                 return res.json()
             })
             .then(data => {
                 const retorno = data;
-                console.log(retorno.retorno);
+                
                 if (retorno.retorno == true) {
                     console.log(retorno.mensaje);
                     this.setState({ listaT: retorno.mensaje });
@@ -89,7 +100,7 @@ export default class lista_empresas extends Component {
     render() {
         return (
             <>
-               <ScrollView>
+                <ScrollView>
                     <Text style={styles.titulo} >Lista de Empresas</Text>
                     {this.parseData()}
                 </ScrollView>

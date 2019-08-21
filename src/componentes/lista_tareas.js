@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, Alert, ScrollView, Keyboard } from 'react-native';
+import { StyleSheet, View, Text, Alert, ScrollView, Keyboard, AsyncStorage } from 'react-native';
 const { server } = require('../config/keys');
 import { ListItem, Icon, Divider } from 'react-native-elements';
 import { FloatingAction } from "react-native-floating-action";
@@ -7,7 +7,7 @@ import moment from "moment";
 
 export default class lista_tareas extends Component {
     static navigationOptions = {
-        title: 'TINE',
+        title: 'Listas de tareas',
         headerStyle: {
             backgroundColor: '#1E8AF1',
         },
@@ -17,9 +17,10 @@ export default class lista_tareas extends Component {
         },
         headerRight: (
             <Icon
+                reverse
                 name='face'
                 type='material'
-                color='white'
+                color='#1E8AF1'
                 onPress={() => console.log('perfil')} />
         ),
 
@@ -36,12 +37,18 @@ export default class lista_tareas extends Component {
 
     Listar = async () => {
         Keyboard.dismiss();
+        let session = await AsyncStorage.getItem('usuario');
+        let sesion = JSON.parse(session);
+        let tarea_send = {
+           id: sesion.id
+        }
         await fetch(server.api + '/Tareas/ListaTareas', {
             method: 'POST',
             headers: {
                 'Aceptar': 'application/json',
                 'Content-Type': 'application/json',
             },
+            body: JSON.stringify(tarea_send)
         })
             .then(res => {
                 return res.json()
@@ -60,6 +67,7 @@ export default class lista_tareas extends Component {
         if (this.state.listaT) {
             var fecha = null;
             return this.state.listaT.map((data, i) => {
+                console.log(data);
                 //fecha de inicio y de fin de la tarea
                 var dia_inicio = new Date(data.inicio);
                 var dia_fin = new Date(data.fin);
@@ -80,7 +88,7 @@ export default class lista_tareas extends Component {
                 fecha = moment(dia_inicio).format('MMMM Do YYYY');
                 return (
                     <View key={i}>
-                        {comp != moment(dia_inicio).format('MMMM Do YYYY') ? <Text style={{marginLeft: 10}}>{moment(dia_inicio).format('MMMM Do YYYY')}</Text> : null}
+                        {comp != moment(dia_inicio).format('MMMM Do YYYY') ? <Text style={{marginTop: 5, marginLeft: 10, fontSize: 15 }}>{moment(dia_inicio).format('ddd, Do MMMM')}</Text> : null}
                         <ListItem
                             leftIcon={{ name: 'assignment' }}
                             title={data.titulo}
@@ -89,7 +97,7 @@ export default class lista_tareas extends Component {
                                 "Opciones",
                                 "de tarea " + data.titulo,
                                 [
-                                    { text: "Modificar", onPress: () => console.log("modificado") },
+                                    { text: "Modificar", onPress: () => this.redireccionar_modificar(data.id, data.inicio, data.fin, data.titulo) },
                                     {
                                         text: "Eliminar",
                                         onPress: () => console.log("eliminado"),
@@ -99,13 +107,9 @@ export default class lista_tareas extends Component {
                                 { cancelable: true }
                             )
                             }
-
                         />
-
                     </View>
-
                 )
-
             })
         }
         else {
@@ -125,6 +129,11 @@ export default class lista_tareas extends Component {
     }
 
 
+    redireccionar_modificar = async (id, inicio, fin, titulo) => {
+        var myArray = [id, inicio, fin, titulo];
+        AsyncStorage.setItem('tarea_mod', JSON.stringify(myArray));
+        this.props.navigation.navigate('modificar_tarea');
+    }
 
 
 
@@ -148,7 +157,6 @@ export default class lista_tareas extends Component {
 
         return (
             <>
-                <Text style={styles.titulo}>Lista de tareas</Text>
                 <ScrollView>
                     {this.parseData()}
                 </ScrollView>

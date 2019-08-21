@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, Keyboard } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, AsyncStorage, Keyboard } from 'react-native';
 const { server } = require('../config/keys');
 import { Button, Input, Icon } from 'react-native-elements';
 import { TouchableHighlight } from 'react-native';
@@ -21,9 +21,10 @@ export default class Alta_tarea extends Component {
         },
         headerRight: (
             <Icon
+                reverse
                 name='face'
                 type='material'
-                color='white'
+                color='#1E8AF1'
                 onPress={() => console.log('perfil')} />
         ),
 
@@ -51,7 +52,7 @@ export default class Alta_tarea extends Component {
 
     }
 
-    toggleStopwatch= async () => {
+    toggleStopwatch = async () => {
         Keyboard.dismiss();
         this.setState({ stopwatchStart: !this.state.stopwatchStart, stopwatchReset: false });
         let fecha = moment(new Date()).format();
@@ -141,6 +142,8 @@ export default class Alta_tarea extends Component {
 
         }
     }
+
+
     render() {
         return (
 
