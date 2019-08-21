@@ -14,9 +14,10 @@ export default class lista_empresas extends Component {
             listaT: '',
         }
         this.Listar();
+
     }
 
-    static navigationOptions = ({ navigation }) => {
+    static navigationOptions = ({ navigation })  => {
         return {
             title: 'TINE',
             headerStyle: {
@@ -28,19 +29,19 @@ export default class lista_empresas extends Component {
             },
             headerRight: (
                 <Icon
-                reverse
-                name='face'
-                type='material'
-                color='#1E8AF1'
-                onPress={() => navigation.navigate('perfil')} />
-              
+                    name='face'
+                    type='material'
+                    color='white'
+                    onPress={ async ()=>navigation.navigate('perfil',{session:await AsyncStorage.getItem('usuario')})} />
             ),
 
-        };
+        }
+    };
+
+
+    redireccionar_perfil() {
+        this.props.navigation.navigate('perfil');
     }
-
-
-
 
 
     Listar = async () => {
@@ -83,6 +84,9 @@ export default class lista_empresas extends Component {
         this.props.navigation.navigate('lista_tareas');
     }
 
+
+
+
     parseData() {
         if (this.state.listaT) {
             return this.state.listaT.map((data, i) => {
@@ -99,6 +103,7 @@ export default class lista_empresas extends Component {
     }
     render() {
         return (
+
             <>
                 <ScrollView>
                     <Text style={styles.titulo} >Lista de Empresas</Text>
