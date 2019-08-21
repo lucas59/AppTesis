@@ -29,9 +29,10 @@ export default class lista_empresas extends Component {
             },
             headerRight: (
                 <Icon
+                reverse
                     name='face'
                     type='material'
-                    color='white'
+                    color='#1E8AF1'
                     onPress={ async ()=>navigation.navigate('perfil',{session:await AsyncStorage.getItem('usuario')})} />
             ),
 
