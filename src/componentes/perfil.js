@@ -16,6 +16,18 @@ const { server } = require('../config/keys');
 
 export default class Profile extends Component {
 
+  static navigationOptions = {
+    title: 'TINE',
+    headerStyle: {
+        backgroundColor: '#1E8AF1',
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+        fontWeight: 'bold',
+    },
+   
+
+};
   constructor(props) {
     super(props);
     this.state = {

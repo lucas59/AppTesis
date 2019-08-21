@@ -15,7 +15,7 @@ import perfil from './src/componentes/perfil';
 import modificar_tarea from './src/componentes/modificar_tarea'
 
 const AppStack = createStackNavigator({ Inicio: Inicio});
-const Tareas = createStackNavigator({ lista_empresas: lista_empresas,altaTarea: altaTarea, lista_tareas: lista_tareas,perfil:perfil});
+const Tareas = createStackNavigator({ lista_empresas: lista_empresas,altaTarea: altaTarea, lista_tareas: lista_tareas,perfil:perfil, modificar_tarea: modificar_tarea});
 const empresa = createStackNavigator({modoTablet: modoTablet, perfilEmpresa:perfil});
 const AuthStack = createStackNavigator({ Login: Login, Signup: Signup });
 const AuthStack2 = createStackNavigator({ Signup2: Signup2 });

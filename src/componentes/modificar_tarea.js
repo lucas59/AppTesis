@@ -153,7 +153,7 @@ export default class Alta_tarea extends Component {
                 />
                 <Divider style={{ backgroundColor: 'blue' }} />
                 <Button
-                    title={moment(this.state.tarea_inicio).format('MMMM Do YYYY, h:mm:ss a').toString()}
+                    title={moment(this.state.tarea_inicio).format('MMMM Do YYYY, HH:mm').toString()}
                     onPress={this.showDateTimePicker_inicio}
                     type="clear"
                 />
@@ -166,7 +166,7 @@ export default class Alta_tarea extends Component {
                 />
                 <Divider style={{ backgroundColor: 'blue' }} />
                 <Button
-                    title={moment(this.state.tarea_fin).format('MMMM Do YYYY, h:mm:ss a').toString()}
+                    title={moment(this.state.tarea_fin).format('MMMM Do YYYY, HH:mm').toString()}
                     onPress={this.showDateTimePicker_fin}
                     type="clear"
                 />
