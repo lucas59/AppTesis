@@ -67,7 +67,6 @@ export default class lista_tareas extends Component {
         if (this.state.listaT) {
             var fecha = null;
             return this.state.listaT.map((data, i) => {
-                console.log(data);
                 //fecha de inicio y de fin de la tarea
                 var dia_inicio = new Date(data.inicio);
                 var dia_fin = new Date(data.fin);
