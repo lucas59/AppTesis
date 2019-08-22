@@ -60,7 +60,7 @@ export default class Alta_tarea extends Component {
         var loc = await Location.getCurrentPositionAsync();
         var longitud = loc.coords.longitude;
         var latitud = loc.coords.latitude;
-        if (this.state.stopwatchStart == false) {
+        if (this.state.stopwatchStart) {
             this.setState({ inicio: fecha });
             this.setState({ long_ini: longitud });
             this.setState({ lat_ini: latitud });
@@ -105,9 +105,13 @@ export default class Alta_tarea extends Component {
 
         }
         console.log(tarea_send);
-        if (tarea_send.inicio == '' || tarea_send.fin == '') {
+        if (tarea_send.inicio == '' && tarea_send.fin == '') {
             this.setState({ cargando: false });
-            alert("Inicie una tarea");
+            alert("Inicie la tarea");
+        }
+        else if (tarea_send.inicio != '' && tarea_send.fin == '') {
+            this.setState({ cargando: false });
+            alert("Finalize la tarea");
         }
         else if (tarea_send.titulo == '') {
             this.setState({ cargando: false });

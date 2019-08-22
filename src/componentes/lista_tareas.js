@@ -40,7 +40,7 @@ export default class lista_tareas extends Component {
         let session = await AsyncStorage.getItem('usuario');
         let sesion = JSON.parse(session);
         let tarea_send = {
-           id: sesion.id
+            id: sesion.id
         }
         await fetch(server.api + '/Tareas/ListaTareas', {
             method: 'POST',
@@ -67,31 +67,26 @@ export default class lista_tareas extends Component {
         if (this.state.listaT) {
             var fecha = null;
             return this.state.listaT.map((data, i) => {
-                //fecha de inicio y de fin de la tarea
-                var dia_inicio = new Date(data.inicio);
-                var dia_fin = new Date(data.fin);
-
                 //fecha pasa de Date a moment
-                const moment_inicio = moment(dia_inicio);
-                const moment_final = moment(dia_fin);
+                const moment_inicio = moment(data.inicio);
+                const moment_final = moment(data.fin);
+                
+                const diff = moment_final.diff(moment_inicio);
+                const diffDuration = moment.duration(diff);
 
-                //obtener las horas, minutos y segundos
-                const segundos = moment_inicio.diff(moment_final, 'seconds');
-                const minutos = moment_inicio.diff(moment_final, 'minutes');
-                const horas = moment_inicio.diff(moment_final, 'hour');
 
                 //setear la fecha de la tarea en una variable para luego compararla con la fecha de la tarea actual
                 var comp = fecha;
 
                 //fecha es igual a la fecha de la tarea actual
-                fecha = moment(dia_inicio).format('MMMM Do YYYY');
+                fecha = moment(data.inicio).format('MMMM Do YYYY');
                 return (
                     <View key={i}>
-                        {comp != moment(dia_inicio).format('MMMM Do YYYY') ? <Text style={{marginTop: 5, marginLeft: 10, fontSize: 15 }}>{moment(dia_inicio).format('ddd, Do MMMM')}</Text> : null}
+                        {comp != fecha ? <Text style={{ marginTop: 5, marginLeft: 10, fontSize: 15 }}>{moment(data.inicio).format('MMMM Do YYYY')}</Text> : null}
                         <ListItem
                             leftIcon={{ name: 'assignment' }}
                             title={data.titulo}
-                            rightTitle={horas + "h " + minutos + "m " + segundos + "s"}
+                            rightTitle={diffDuration.hours() + "h " + diffDuration.minutes() + "m " + diffDuration.seconds() + "s"}
                             onPress={() => Alert.alert(
                                 "Opciones",
                                 "de tarea " + data.titulo,
@@ -99,7 +94,7 @@ export default class lista_tareas extends Component {
                                     { text: "Modificar", onPress: () => this.redireccionar_modificar(data.id, data.inicio, data.fin, data.titulo) },
                                     {
                                         text: "Eliminar",
-                                        onPress: () => console.log("eliminado"),
+                                        onPress: () => this.EliminarTarea(data.id),
                                         style: "cancel"
                                     },
                                 ],
@@ -118,6 +113,34 @@ export default class lista_tareas extends Component {
         }
     }
 
+    EliminarTarea(id){
+        let tarea_send = {
+           id: id
+        }
+        fetch(server.api + 'EliminarTarea', {
+            method: 'POST',
+            headers: {
+                'Aceptar': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(tarea_send)
+        })
+            .then(res => {
+                return res.json()
+            })
+            .then(data => {
+                const retorno = data;
+                if (retorno.retorno == true) {
+                    alert("La tarea se eliminó correctamente");
+                } else {
+                    alert(retorno.mensaje);
+                }
+            })
+            .catch(function (err) {
+                console.log('error', err);
+            })
+
+    }
     redireccionar_alta = async (name) => {
         if (name == "bt_tarea") {
             this.props.navigation.navigate('altaTarea');

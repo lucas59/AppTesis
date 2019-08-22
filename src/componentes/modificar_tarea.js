@@ -44,13 +44,12 @@ export default class Alta_tarea extends Component {
     obtener_tarea = async () => {
         var tarea = await AsyncStorage.getItem('tarea_mod');
         var tarea_2 = JSON.parse(tarea);
-        var hora_inicio = new Date(tarea_2[2]);
-        var hora_fin = new Date(tarea_2[1]);
+        var hora_inicio = new Date(tarea_2[1]);
+        var hora_fin = new Date(tarea_2[2]);
         this.setState({ tarea_id: tarea_2[0] });
         this.setState({ tarea_titulo: tarea_2[3]});
         this.setState({ tarea_inicio: hora_inicio});
         this.setState({ tarea_fin: hora_fin });
-        console.log(this.state.tarea_inicio);
     }
 
     saveData = async () => {
@@ -112,15 +111,17 @@ export default class Alta_tarea extends Component {
         var horainicio_comp = moment(pickeddate).format('HH:mm:ss');
         var fechafin_comp = moment(this.state.tarea_fin).format('MMMM Do, YYYY');
         var fechainicio_comp = moment(pickeddate).format('MMMM Do, YYYY');
+        console.log(horainicio_comp);
         if (fechafin_comp < fechainicio_comp) {
             var fin = moment(pickeddate).add(1, 'hours');
-            this.setState({ tarea_fin: fin });
+            this.setState({ tarea_fin: moment(fin).format() });
         }
         else if (fechafin_comp == fechainicio_comp && horafin_comp <= horainicio_comp) {
             var fin = moment(pickeddate).add(1, 'hours');
-            this.setState({ tarea_fin: fin });
+            this.setState({ tarea_fin: fin.format() });
         }
         this.setState({ tarea_inicio: moment(pickeddate).format() });
+        this.setState({ tarea_fin: moment(this.state.tarea_fin).format() });
         this.hideDateTimePicker_inicio();
     };
 
@@ -131,13 +132,14 @@ export default class Alta_tarea extends Component {
         var fechainicio_comp = moment(this.state.tarea_inicio).format('MMMM Do, YYYY');
         if (fechafin_comp < fechainicio_comp) {
             var fin = moment(pickeddate).subtract(1, 'hours');
-            this.setState({ tarea_inicio: fin.toDate() });
+            this.setState({ tarea_inicio: fin.format() });
         }
         else if (fechafin_comp == fechafin_comp && horafin_comp <= horainicio_comp) {
             var fin = moment(pickeddate).subtract(1, 'hours');
-            this.setState({ tarea_inicio: fin.toDate() });
+            this.setState({ tarea_inicio: fin.format() });
         }
         this.setState({ tarea_fin: moment(pickeddate).format() });
+        this.setState({ tarea_inicio: moment(this.state.tarea_inicio).format() });
         this.hideDateTimePicker_fin();
     };
 
@@ -172,7 +174,7 @@ export default class Alta_tarea extends Component {
                 />
                 <DateTimePicker
                     isVisible={this.state.isDateTimePickerVisible_fin}
-                    onConfirm={this.handleDatePicked_fin}
+                    onConfirm={(date) => this.handleDatePicked_fin(date)}
                     onCancel={this.hideDateTimePicker_fin}
                     mode={'datetime'}
                     date={moment(this.state.tarea_fin).toDate()}
